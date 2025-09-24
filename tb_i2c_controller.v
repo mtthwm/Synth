@@ -3,7 +3,7 @@ module tb_i2c_controller ();
     reg clk, reset, enable, mode;
     reg [6:0] periph_addr;
     reg [7:0] byte;
-    wire [3:0] state;
+    wire [7:0] counter_out;
     wire sdc;
     wire sda;
 
@@ -12,8 +12,8 @@ module tb_i2c_controller ();
         .reset(reset),
         .enable(enable),
         .mode(mode),
+        .byte(byte),
         .periph_addr(periph_addr),
-        .state(state),
         .sdc(sdc),
         .sda(sda)
     );
@@ -24,11 +24,12 @@ module tb_i2c_controller ();
     initial begin
         byte = 8'd7;
         mode = 1'b1;
-        periph_addr = 7'd3;
+        periph_addr = 7'd5;
         enable = 1'b0;
         reset = 0; #1; reset = 1; #1; reset = 0;
         enable = 1'b1;
-        #32;
+        #8;
+        enable = 1'b0;
     end
 
 endmodule
