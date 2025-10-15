@@ -1,5 +1,5 @@
 module counter (
-    input wire clk, reset,
+    input wire clk, reset, enable,
     input wire[7:0] max,
     output reg [7:0] value
 );
@@ -8,10 +8,12 @@ module counter (
         if (reset) begin
             value <= 8'd0;
         end else begin
-            if (value === max-1) begin
-                value <= 8'd0;
-            end else begin
-                value <= value + 8'd1;
+            if (enable) begin
+                if (value === max-1) begin
+                    value <= 8'd0;
+                end else begin
+                    value <= value + 8'd1;
+                end
             end
         end
     end
