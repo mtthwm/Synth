@@ -25,7 +25,7 @@ module tb_i2s_controller ();
         sample_right = 16'd17;
 
 
-        send = 1'b0; #1; send = 1'b1; #1; send = 1'b0;
+        send = 1'b0; #1; send = 1'b1;
     end
 
 endmodule

@@ -2,7 +2,7 @@ module i2s_controller (
     input wire clk, reset, send,
     input wire [15:0] sample_left, sample_right,
     output wire bit_clk, data, 
-    output reg frame_clk, ready
+    output reg frame_clk
 );    
 
     function [15:0] reverse_bit_order (
@@ -27,7 +27,7 @@ module i2s_controller (
         .reset(reset),
         .max(8'd32),
         .value(counter_out),
-        .enable(!ready)
+        .enable(send)
     );
 
     always @(clk, posedge reset) begin
@@ -55,20 +55,14 @@ module i2s_controller (
     assign all_data = {left_cache, right_cache};
     assign data = all_data[counter_out[4:0]];
 
-    always @(posedge send, negedge frame_clk, posedge reset) begin
+    always @(posedge send, posedge frame_clk, posedge reset) begin
         if (reset) begin
             left_cache <= 16'd0;
             right_cache <= 16'd0;
-            ready <= 1'b1;
         end else begin
             if (send) begin
                 left_cache <= reverse_bit_order(sample_left);
                 right_cache <= reverse_bit_order(sample_right);
-                ready <= 1'b0;
-            end
-
-            if (!ready && !frame_clk) begin
-                ready = 1'b1;
             end
         end
     end
