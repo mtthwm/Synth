@@ -38,8 +38,15 @@ module tb_i2c_controller ();
         enable = 1'b0;
         reset = 0; #1; reset = 1; #1; reset = 0;
         enable = 1'b1;
-        #2;
-        
+        #4;
+        enable = 1'b0;
+        while (~ready) begin
+            #1;
+        end
+        mode = READ;
+        enable = 1'b1;
+        #8;
+        enable = 1'b0;
     end
 
 endmodule

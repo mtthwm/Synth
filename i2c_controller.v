@@ -40,7 +40,7 @@ module i2c_controller (
         .value(counter_8_out)
     );
 
-    assign debug = oop_clk;
+    assign debug = state;
 
     wire [7:0] shiftreg_out;
     shiftreg sr (
