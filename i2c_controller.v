@@ -67,13 +67,6 @@ module i2c_controller (
 
             if (oop_clk && clock_div) begin
                 case (state)
-                    IDLE: begin
-                        if (enable) begin
-                            state <= SENDING_START;
-                        end else begin
-                            state <= IDLE;
-                        end
-                    end
                     SENDING_START: begin
                         state <= SENDING_ADDR;
                     end
@@ -118,6 +111,13 @@ module i2c_controller (
                 endcase
             end else begin
                 state <= state;
+            end
+            if (state == IDLE) begin
+                if (enable) begin
+                    state <= SENDING_START;
+                end else begin
+                    state <= IDLE;
+                end
             end
         end
     end

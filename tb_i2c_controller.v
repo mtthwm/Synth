@@ -41,11 +41,11 @@ module tb_i2c_controller ();
         #4;
         enable = 1'b0;
         while (~ready) begin
-            #1;
+            #2;
         end
         mode = READ;
         enable = 1'b1;
-        #8;
+        #2;
         enable = 1'b0;
     end
 
