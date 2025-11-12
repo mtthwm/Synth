@@ -1,9 +1,11 @@
 module i2c_test_top (
     input wire clk, reset,
     inout wire sda,
-    output wire scl,
+    output wire scl, led,
     output wire [6:0] ss0, ss1, ss2
 );
+
+    assign led = sda == 1'b1;
 
     wire slow_clk;
     wire [7:0] read_byte;

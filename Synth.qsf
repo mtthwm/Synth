@@ -70,26 +70,11 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_tone_gen -section_id t
 set_global_assignment -name EDA_TEST_BENCH_NAME tb_i2s_controller -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_i2s_controller
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_i2s_controller -section_id tb_i2s_controller
+set_location_assignment PIN_V16 -to led
 set_location_assignment PIN_AE12 -to reset
 set_location_assignment PIN_AF14 -to clk
 set_location_assignment PIN_J12 -to scl
 set_location_assignment PIN_K12 -to sda
-set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_square_wave_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_square_wave_gen.v -section_id tb_square_wave_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE i2c_controller.v -section_id tb_i2c_controller
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_i2c_controller.v -section_id tb_i2c_controller
-set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_i2c_controller
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_tone_gen.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE square_amp.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE tflipflop.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE tone_gen.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE shiftreg.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE i2s_controller.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE i2s_controller.v -section_id tb_i2s_controller
-set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_i2s_controller
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_i2s_controller.v -section_id tb_i2s_controller
 set_global_assignment -name VERILOG_FILE i2c_test_top.v
 set_global_assignment -name VERILOG_FILE sevenseg.v
 set_global_assignment -name VERILOG_FILE pulse_sender.v
@@ -132,4 +117,20 @@ set_location_assignment PIN_AB27 -to ss2[3]
 set_location_assignment PIN_AB26 -to ss2[2]
 set_location_assignment PIN_AA26 -to ss2[1]
 set_location_assignment PIN_AA25 -to ss2[0]
+set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_square_wave_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_square_wave_gen.v -section_id tb_square_wave_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE i2c_controller.v -section_id tb_i2c_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_i2c_controller.v -section_id tb_i2c_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_i2c_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_tone_gen.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE square_amp.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE tflipflop.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE tone_gen.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE shiftreg.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE i2s_controller.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE i2s_controller.v -section_id tb_i2s_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_i2s_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_i2s_controller.v -section_id tb_i2s_controller
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

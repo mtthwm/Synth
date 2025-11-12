@@ -5,6 +5,7 @@ module i2c_controller (
     output reg [3:0] state,
     output reg scl, ready,
     output wire [7:0] read_byte,
+    output wire [7:0] debug,
     inout wire sda
 );
     parameter READ              = 1'b0;
@@ -30,17 +31,20 @@ module i2c_controller (
 
     wire [7:0] counter_8_out;
     counter count8 (
+        .enable(enable),
         .clk(oop_clk),
         .reset(counter_reset),
         .max(8'd9),
         .value(counter_8_out)
     );
 
+    assign debug = oop_clk;
+
     wire [7:0] shiftreg_out;
     shiftreg sr (
         .clk(oop_clk),
         .reset(counter_reset),
-        .data(sda === 1'bz ? 1'b0 : sda),
+        .data(sda),
         .enable(enable_shiftreg),
         .value(shiftreg_out)
     );
