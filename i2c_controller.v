@@ -4,7 +4,7 @@ module i2c_controller (
     input wire [7:0] transmit_byte,
     output reg [3:0] state,
     output reg scl, ready,
-    output wire [7:0] read_byte,
+    output reg [7:0] byte_reg,
     output wire [7:0] debug,
     inout wire sda
 );
@@ -29,9 +29,11 @@ module i2c_controller (
     reg clock_div;
     reg enable_shiftreg;
 
+    wire [7:0] read_byte;
+
     wire [7:0] counter_8_out;
     counter count8 (
-        .enable(enable),
+        .enable(1'b1),
         .clk(oop_clk),
         .reset(counter_reset),
         .max(8'd9),
@@ -91,6 +93,7 @@ module i2c_controller (
                     end
                     RECEIVING_BYTE: begin
                         if (counter_8_out === 8'd8) begin
+                            byte_reg <= read_byte;
                             state <= SENDING_ACK;
                         end else begin
                             state <= RECEIVING_BYTE;
@@ -125,7 +128,7 @@ module i2c_controller (
     always @(*) begin
         case (state)
             IDLE: begin
-                ready = 1'b1;
+                ready = ~enable;
                 sda_driver = 1'b1;
                 sda_mode = WRITE;
                 scl = 1'b1;
@@ -199,7 +202,7 @@ module i2c_controller (
                 enable_shiftreg = 1'b0;
             end
             SENDING_STOP: begin
-                ready = 1'b1;
+                ready = 1'b0;
                 sda_driver = 1'b1;
                 sda_mode = WRITE;
                 scl = 1'b1;

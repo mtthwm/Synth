@@ -28,7 +28,7 @@ module gpio_i2c_test (
         .sda(sda),
         .state(state_out),
         .ready(),
-        .read_byte()
+        .byte_reg()
     );
 
 endmodule

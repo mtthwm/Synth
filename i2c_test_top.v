@@ -1,11 +1,12 @@
 module i2c_test_top (
     input wire clk, reset,
     inout wire sda,
-    output wire scl, led,
+    output wire scl, sda_indicator, clk_indicator,
     output wire [6:0] ss0, ss1, ss2
 );
 
-    assign led = sda == 1'b1;
+    assign sda_indicator = sda == 1'b1;
+    assign clk_indicator = scl;
 
     wire slow_clk;
     wire [7:0] read_byte;
@@ -14,8 +15,8 @@ module i2c_test_top (
     square_wave_gen sg (
         .clk(clk),
         .reset(reset),
-        .period(32'd50_000_000),
-        .duty_cycle(32'd25_000_000),
+        .period(32'd12_500_000),
+        .duty_cycle(32'd6_250_000),
         .value(slow_clk)
     );
 
