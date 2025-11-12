@@ -12,9 +12,11 @@ module i2c_fsm (
 
     parameter S_IDLE = 0;
     parameter S_TARGET_CONTROL_REG_0 = 1;
-    parameter S_SENDING_CONTROL_VAL = 2;
-    parameter S_TARGET_CONTROL_REG_1 = 3;
-    parameter S_READING_CONTROL_REG = 4;
+    parameter S_SENDING_CONTROL_REG_ADDR = 2;
+    parameter S_PREPARING_CONTROL_VAL = 3;
+    parameter S_SENDING_CONTROL_VAL = 4;
+    parameter S_TARGET_CONTROL_REG_2 = 5;
+    parameter S_READING_CONTROL_REG = 6;
 
     reg mode;
     reg [7:0] transmit_byte;
@@ -48,14 +50,22 @@ module i2c_fsm (
                     state <= S_TARGET_CONTROL_REG_0;
                 end
                 S_TARGET_CONTROL_REG_0: begin
+                    state <= S_SENDING_CONTROL_REG_ADDR;
+                end
+                S_SENDING_CONTROL_REG_ADDR: begin
+                    if (ready) begin
+                        state <= S_PREPARING_CONTROL_VAL;
+                    end
+                end
+                S_PREPARING_CONTROL_VAL: begin
                     state <= S_SENDING_CONTROL_VAL;
                 end
                 S_SENDING_CONTROL_VAL: begin
                     if (ready) begin
-                        state <= S_TARGET_CONTROL_REG_1;
+                        state <= S_TARGET_CONTROL_REG_2;
                     end
                 end
-                S_TARGET_CONTROL_REG_1: begin
+                S_TARGET_CONTROL_REG_2: begin
                     state <= S_READING_CONTROL_REG;
                 end
                 S_READING_CONTROL_REG: begin
@@ -78,12 +88,22 @@ module i2c_fsm (
                 mode = 1'b1;
                 transmit_byte = WM8731_RESET_ADDR;
             end
-            S_SENDING_CONTROL_VAL: begin
+            S_SENDING_CONTROL_REG_ADDR: begin
                 enable = 1'b0;
                 mode = 1'b1;
                 transmit_byte = WM8731_RESET_ADDR;
             end
-            S_TARGET_CONTROL_REG_1: begin
+            S_PREPARING_CONTROL_VAL: begin
+                enable = 1'b1;
+                mode = 1'b1;
+                transmit_byte = 8'b10101011;
+            end
+            S_SENDING_CONTROL_VAL: begin
+                enable = 1'b0;
+                mode = 1'b1;
+                transmit_byte = 8'b10101011;
+            end
+            S_TARGET_CONTROL_REG_2: begin
                 enable = 1'b1;
                 mode = 1'b0;
                 transmit_byte = WM8731_RESET_ADDR;
