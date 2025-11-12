@@ -1,9 +1,9 @@
 module i2c_controller (
     input wire clk, reset, enable, mode,
     input wire [6:0] periph_addr,
-    input wire [7:0] byte,
+    input wire [7:0] transmit_byte,
     output reg [3:0] state,
-    output reg sdc, ready,
+    output reg scl, ready,
     output wire [7:0] read_byte,
     inout wire sda
 );
@@ -124,7 +124,7 @@ module i2c_controller (
                 ready = 1'b1;
                 sda_driver = 1'b1;
                 sda_mode = WRITE;
-                sdc = 1'b1;
+                scl = 1'b1;
                 counter_reset = 1'b0;
                 enable_shiftreg = 1'b0;
             end
@@ -132,7 +132,7 @@ module i2c_controller (
                 ready = 1'b0;
                 sda_driver =1'b0;
                 sda_mode = WRITE;
-                sdc = slow_clk;
+                scl = slow_clk;
                 counter_reset = 1'b1;
                 enable_shiftreg = 1'b0;
             end
@@ -149,7 +149,7 @@ module i2c_controller (
                     7: sda_driver = mode;
                 endcase
                 sda_mode = WRITE;
-                sdc = slow_clk;
+                scl = slow_clk;
                 counter_reset = 1'b0;
                 enable_shiftreg = 1'b0;
             end
@@ -157,7 +157,7 @@ module i2c_controller (
                 ready = 1'b0;
                 sda_driver = 1'b1;
                 sda_mode = READ;
-                sdc = slow_clk;
+                scl = slow_clk;
                 counter_reset = 1'b1;
                 enable_shiftreg = 1'b0;
             end
@@ -165,24 +165,24 @@ module i2c_controller (
                 ready = 1'b0;
                 sda_driver = 1'b0;
                 sda_mode = READ;
-                sdc = slow_clk;
+                scl = slow_clk;
                 counter_reset = 1'b0;
                 enable_shiftreg = 1'b1;
             end
             WRITING_BYTE: begin
                 ready = 1'b0;
                 case (counter_8_out[2:0])
-                    0: sda_driver = byte[7];
-                    1: sda_driver = byte[6];
-                    2: sda_driver = byte[5];
-                    3: sda_driver = byte[4];
-                    4: sda_driver = byte[3];
-                    5: sda_driver = byte[2];
-                    6: sda_driver = byte[1];
-                    7: sda_driver = byte[0];
+                    0: sda_driver = transmit_byte[7];
+                    1: sda_driver = transmit_byte[6];
+                    2: sda_driver = transmit_byte[5];
+                    3: sda_driver = transmit_byte[4];
+                    4: sda_driver = transmit_byte[3];
+                    5: sda_driver = transmit_byte[2];
+                    6: sda_driver = transmit_byte[1];
+                    7: sda_driver = transmit_byte[0];
                 endcase
                 sda_mode = WRITE;
-                sdc = slow_clk;
+                scl = slow_clk;
                 counter_reset = 1'b0;
                 enable_shiftreg = 1'b0;
             end
@@ -190,7 +190,7 @@ module i2c_controller (
                 ready = 1'b0;
                 sda_driver = 1'b0;
                 sda_mode = READ;
-                sdc = slow_clk;
+                scl = slow_clk;
                 counter_reset = 1'b0;
                 enable_shiftreg = 1'b0;
             end
@@ -198,7 +198,7 @@ module i2c_controller (
                 ready = 1'b1;
                 sda_driver = 1'b1;
                 sda_mode = WRITE;
-                sdc = 1'b1;
+                scl = 1'b1;
                 counter_reset = 1'b0;
                 enable_shiftreg = 1'b0;
             end
@@ -206,7 +206,7 @@ module i2c_controller (
                 ready = 1'b1;
                 sda_driver =1'b1;
                 sda_mode = WRITE;
-                sdc = 1'b1;
+                scl = 1'b1;
                 counter_reset = 1'b0;
                 enable_shiftreg = 1'b0;
             end

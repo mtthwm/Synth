@@ -2,10 +2,10 @@ module tb_i2c_controller ();
 
     reg clk, reset, enable, mode;
     reg [6:0] periph_addr;
-    reg [7:0] byte;
+    reg [7:0] transmit_byte;
     wire [7:0] read_byte;
     wire ready;
-    wire sdc;
+    wire scl;
     wire sda;
     reg sda_mode;
     reg sda_driver;
@@ -20,11 +20,11 @@ module tb_i2c_controller ();
         .reset(reset),
         .enable(enable),
         .mode(mode),
-        .byte(byte),
+        .transmit_byte(transmit_byte),
         .read_byte(read_byte),
         .ready(ready),
         .periph_addr(periph_addr),
-        .sdc(sdc),
+        .scl(scl),
         .sda(sda)
     );
 
@@ -33,7 +33,7 @@ module tb_i2c_controller ();
 
     initial begin
         sda_mode = READ;
-        byte = 8'd7;
+        transmit_byte = 8'd7;
         mode = READ;
         periph_addr = 7'd5;
         enable = 1'b0;
