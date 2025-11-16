@@ -1,10 +1,11 @@
 module i2c_controller (
     input wire clk, reset, enable, mode,
     input wire [6:0] periph_addr,
-    input wire [7:0] transmit_byte,
+    input wire [7:0] input_byte,
     output reg [3:0] state,
     output reg scl, ready,
     output reg [7:0] byte_reg,
+    output wire write_in_progress,
     output wire [7:0] debug,
     inout wire sda
 );
@@ -28,8 +29,11 @@ module i2c_controller (
     reg oop_clk;
     reg clock_div;
     reg enable_shiftreg;
+    reg [7:0] transmit_byte;
 
     wire [7:0] read_byte;
+
+    assign write_in_progress = state == WRITING_BYTE;
 
     wire [7:0] counter_8_out;
     counter count8 (
@@ -81,6 +85,7 @@ module i2c_controller (
                         if (mode === READ) begin
                             state <= RECEIVING_BYTE;
                         end else begin
+                            transmit_byte <= input_byte;
                             state <= WRITING_BYTE;
                         end
                     end
@@ -100,7 +105,12 @@ module i2c_controller (
                         end
                     end
                     WAITING_ACK_1: begin
-                        state <= SENDING_STOP;
+                        if (enable) begin
+                            transmit_byte <= input_byte;
+                            state <= WRITING_BYTE;
+                        end else begin
+                            state <= SENDING_STOP;
+                        end
                     end
                     SENDING_STOP: begin
                         state <= IDLE;

@@ -10,22 +10,21 @@ module i2c_fsm (
     parameter WM8731_RESET_ADDR = 7'b0001111;
     parameter WM8731_SAMP_CTRL_ADDR = 7'b0001000;
 
-    parameter S_IDLE = 0;
-    parameter S_TARGET_CONTROL_REG_0 = 1;
-    parameter S_SENDING_CONTROL_REG_ADDR = 2;
-    parameter S_PREPARING_CONTROL_VAL = 3;
-    parameter S_SENDING_CONTROL_VAL = 4;
-    parameter S_TARGET_CONTROL_REG_2 = 5;
-    parameter S_READING_CONTROL_REG = 6;
+    parameter S_IDLE = 4'd0;
+    parameter S_WRITE_RESET_ADDR = 4'd1;
+    parameter S_WRITE_RESET_VAL = 4'd2;
+    parameter S_FINISHED = 4'd15;
 
     reg mode;
-    reg [7:0] transmit_byte;
+    reg [7:0] input_byte;
     reg [6:0] addr;
-    reg [3:0] state, cached_state;
+    reg [3:0] state;
 
     assign state_info = state;
 
     wire ready; 
+    wire write_in_progress;
+    reg prev_write_in_progress;
     reg enable;
 
     i2c_controller i2c_ctl (
@@ -35,8 +34,9 @@ module i2c_fsm (
         .mode(mode),
         .periph_addr(addr),
         .ready(ready),
+        .write_in_progress(write_in_progress),
         .byte_reg(read_byte),
-        .transmit_byte(transmit_byte),
+        .input_byte(input_byte),
         .scl(scl),
         .sda(sda)
     );
@@ -44,74 +44,45 @@ module i2c_fsm (
     always @(posedge clk, posedge reset) begin
         if (reset) begin
             state <= S_IDLE;
+            prev_write_in_progress <= 1'b0;
         end else begin
             case (state)
-                S_IDLE: begin
-                    state <= S_TARGET_CONTROL_REG_0;
-                end
-                S_TARGET_CONTROL_REG_0: begin
-                    state <= S_SENDING_CONTROL_REG_ADDR;
-                end
-                S_SENDING_CONTROL_REG_ADDR: begin
-                    if (ready) begin
-                        state <= S_PREPARING_CONTROL_VAL;
+                S_IDLE: state <= S_WRITE_RESET_ADDR;
+                S_WRITE_RESET_ADDR: begin
+                    if (write_in_progress && prev_write_in_progress == 1'b0) begin
+                        state <= S_WRITE_RESET_VAL;
                     end
                 end
-                S_PREPARING_CONTROL_VAL: begin
-                    state <= S_SENDING_CONTROL_VAL;
-                end
-                S_SENDING_CONTROL_VAL: begin
-                    if (ready) begin
-                        state <= S_TARGET_CONTROL_REG_2;
+                S_WRITE_RESET_VAL: begin
+                    if (write_in_progress && prev_write_in_progress == 1'b0) begin
+                        state <= S_FINISHED;
                     end
                 end
-                S_TARGET_CONTROL_REG_2: begin
-                    state <= S_READING_CONTROL_REG;
-                end
-                S_READING_CONTROL_REG: begin
-                    state <= S_READING_CONTROL_REG;
-                end
-        endcase
+                S_FINISHED: state <= S_FINISHED;
+            endcase
+            prev_write_in_progress <= write_in_progress;
         end
     end
 
     always @(*) begin
         addr = WM8731_PERIPH_ADDR;
+        mode = 1'b1;
         case (state)
             S_IDLE: begin
+                input_byte = 8'b0;
                 enable = 1'b0;
-                mode = 1'b0;
-                transmit_byte = 8'b0;
             end
-            S_TARGET_CONTROL_REG_0: begin
+            S_WRITE_RESET_ADDR: begin
+                input_byte = WM8731_RESET_ADDR;
                 enable = 1'b1;
-                mode = 1'b1;
-                transmit_byte = WM8731_RESET_ADDR;
             end
-            S_SENDING_CONTROL_REG_ADDR: begin
-                enable = 1'b0;
-                mode = 1'b1;
-                transmit_byte = WM8731_RESET_ADDR;
-            end
-            S_PREPARING_CONTROL_VAL: begin
+            S_WRITE_RESET_VAL: begin
+                input_byte = 8'b0;
                 enable = 1'b1;
-                mode = 1'b1;
-                transmit_byte = 8'b10101011;
             end
-            S_SENDING_CONTROL_VAL: begin
+            S_FINISHED: begin
+                input_byte = 8'b0;
                 enable = 1'b0;
-                mode = 1'b1;
-                transmit_byte = 8'b10101011;
-            end
-            S_TARGET_CONTROL_REG_2: begin
-                enable = 1'b1;
-                mode = 1'b0;
-                transmit_byte = WM8731_RESET_ADDR;
-            end
-            S_READING_CONTROL_REG: begin
-                enable = 1'b0;
-                mode = 1'b0;
-                transmit_byte = 8'b0;
             end
         endcase
 
