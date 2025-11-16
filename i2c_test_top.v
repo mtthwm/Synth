@@ -1,7 +1,7 @@
 module i2c_test_top (
     input wire clk, reset,
     inout wire sda,
-    output wire scl, sda_indicator, clk_indicator,
+    output wire scl, sda_indicator, clk_indicator, debug_indicator,
     output wire [6:0] ss0, ss1, ss2
 );
 

@@ -6,13 +6,17 @@ module i2c_fsm (
     output wire [3:0] state_info
 );
 
-    parameter WM8731_PERIPH_ADDR = 7'b0011010; // IF CSB = 0: 0011010 ELSE 0011011
-    parameter WM8731_RESET_ADDR = 7'b0001111;
-    parameter WM8731_SAMP_CTRL_ADDR = 7'b0001000;
+    parameter WM8731_PERIPH_ADDR = 8'b0011010; // IF CSB = 0: 0011010 ELSE 0011011
+    parameter WM8731_RESET_ADDR = 8'b0001111;
+    parameter WM8731_AUDIO_INTERFACE_ADDR = 8'b0000111;
+    parameter WM8731_SAMP_CTRL_ADDR = 8'b0001000;
 
     parameter S_IDLE = 4'd0;
     parameter S_WRITE_RESET_ADDR = 4'd1;
     parameter S_WRITE_RESET_VAL = 4'd2;
+    parameter S_PAUSE_0 = 4'd3;
+    parameter S_WRITE_AUDIO_INTERFACE_ADDR = 4'd4;
+    parameter S_WRITE_AUDIO_INTERFACE_VAL = 4'd5;
     parameter S_FINISHED = 4'd15;
 
     reg mode;
@@ -55,6 +59,21 @@ module i2c_fsm (
                 end
                 S_WRITE_RESET_VAL: begin
                     if (write_in_progress && prev_write_in_progress == 1'b0) begin
+                        state <= S_PAUSE_0;
+                    end
+                end
+                S_PAUSE_0: begin
+                    if (ready) begin
+                        state <= S_WRITE_AUDIO_INTERFACE_ADDR;
+                    end
+                end
+                S_WRITE_AUDIO_INTERFACE_ADDR: begin
+                    if (write_in_progress && prev_write_in_progress == 1'b0) begin
+                        state <= S_WRITE_AUDIO_INTERFACE_VAL;
+                    end
+                end
+                S_WRITE_AUDIO_INTERFACE_VAL: begin
+                    if (write_in_progress && prev_write_in_progress == 1'b0) begin
                         state <= S_FINISHED;
                     end
                 end
@@ -78,6 +97,18 @@ module i2c_fsm (
             end
             S_WRITE_RESET_VAL: begin
                 input_byte = 8'b0;
+                enable = 1'b1;
+            end
+            S_PAUSE_0: begin
+                input_byte = 8'b0;
+                enable = 1'b0;
+            end
+            S_WRITE_AUDIO_INTERFACE_ADDR: begin
+                input_byte = WM8731_AUDIO_INTERFACE_ADDR;
+                enable = 1'b1;
+            end
+            S_WRITE_AUDIO_INTERFACE_VAL: begin
+                input_byte = 8'b10000000;
                 enable = 1'b1;
             end
             S_FINISHED: begin
