@@ -1,5 +1,5 @@
 module i2s_controller (
-    input wire clk, reset, send,
+    input wire clk, reset,
     input wire [15:0] sample_left, sample_right,
     output wire bit_clk, data, 
     output reg frame_clk
@@ -27,44 +27,39 @@ module i2s_controller (
         .reset(reset),
         .max(8'd32),
         .value(counter_out),
-        .enable(send)
+        .enable(1'b1)
     );
 
-    always @(clk, posedge reset) begin
+    always @(posedge clk, posedge reset) begin
         if (reset) begin
             slow_clk <= 1'b0;
             oop_clk <= 1'b1;
+        end else begin
+            slow_clk <= ~slow_clk;
+            oop_clk <= ~oop_clk;
+        end
+    end
+
+    always @(posedge oop_clk, posedge reset) begin
+        if (reset) begin
             frame_clk <= 1'b0;
         end else begin
-            if (clk) begin
-                slow_clk <= ~slow_clk;
-
-                if (counter_out == 8'd16) begin
-                    frame_clk <= 1'b1;
-                end
-                if (counter_out == 8'd0) begin
-                    frame_clk <= 1'b0;
-                end
-            end else begin
-                oop_clk <= ~oop_clk;
+            if (counter_out == 8'd14) begin
+                frame_clk <= 1'b1;
             end
-        end
-     end
+            if (counter_out == 8'd30) begin
+                frame_clk <= 1'b0;
+            end 
+        end  
+    end
 
     assign bit_clk = slow_clk;
     assign all_data = {left_cache, right_cache};
     assign data = all_data[counter_out[4:0]];
 
-    always @(posedge send, posedge frame_clk, posedge reset) begin
-        if (reset) begin
-            left_cache <= 16'd0;
-            right_cache <= 16'd0;
-        end else begin
-            if (send) begin
-                left_cache <= reverse_bit_order(sample_left);
-                right_cache <= reverse_bit_order(sample_right);
-            end
-        end
+    always @(posedge frame_clk, posedge reset) begin
+        left_cache <= reverse_bit_order(sample_left);
+        right_cache <= reverse_bit_order(sample_right);
     end
 
 endmodule

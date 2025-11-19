@@ -1,6 +1,6 @@
 module tb_i2s_controller ();
 
-    reg clk, reset, send;
+    reg clk, reset;
     reg [15:0] sample_left, sample_right;
 
     wire bit_clk, data;
@@ -8,7 +8,6 @@ module tb_i2s_controller ();
     i2s_controller ctl (
         .clk(clk),
         .reset(reset),
-        .send(send),
         .bit_clk(bit_clk),
         .frame_clk(frame_clk),
         .data(data),
@@ -23,9 +22,6 @@ module tb_i2s_controller ();
         reset = 1'b0; #1; reset = 1'b1; #1; reset = 1'b0;
         sample_left = 16'd17;
         sample_right = 16'd17;
-
-
-        send = 1'b0; #1; send = 1'b1;
     end
 
 endmodule

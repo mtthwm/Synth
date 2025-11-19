@@ -39,7 +39,7 @@
 
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CSEMA5F31C6
-set_global_assignment -name TOP_LEVEL_ENTITY i2c_test_top
+set_global_assignment -name TOP_LEVEL_ENTITY square_wave_top
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 24.1STD.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "09:50:50  SEPTEMBER 17, 2025"
 set_global_assignment -name LAST_QUARTUS_VERSION "24.1std.0 Lite Edition"
@@ -74,6 +74,7 @@ set_location_assignment PIN_AE12 -to reset
 set_location_assignment PIN_AF14 -to clk
 set_location_assignment PIN_J12 -to scl
 set_location_assignment PIN_K12 -to sda
+set_global_assignment -name VERILOG_FILE square_wave_top.v
 set_global_assignment -name VERILOG_FILE i2c_test_top.v
 set_global_assignment -name VERILOG_FILE sevenseg.v
 set_global_assignment -name VERILOG_FILE pulse_sender.v
@@ -95,6 +96,17 @@ set_global_assignment -name VERILOG_FILE gpio_test.v
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_location_assignment PIN_H7 -to bit_clk
+set_location_assignment PIN_J7 -to data
+set_location_assignment PIN_H8 -to frame_clk
+set_location_assignment PIN_AB12 -to tone[0]
+set_location_assignment PIN_AC12 -to tone[1]
+set_location_assignment PIN_AF9 -to tone[2]
+set_location_assignment PIN_AF10 -to tone[3]
+set_location_assignment PIN_Y17 -to gpio_debug[1]
+set_location_assignment PIN_AC18 -to gpio_debug[0]
+set_location_assignment PIN_AD17 -to gpio_debug[2]
+set_location_assignment PIN_G7 -to chip_clk
 set_location_assignment PIN_AE26 -to ss0[6]
 set_location_assignment PIN_AE27 -to ss0[5]
 set_location_assignment PIN_AE28 -to ss0[4]
@@ -102,20 +114,6 @@ set_location_assignment PIN_AG27 -to ss0[3]
 set_location_assignment PIN_AF28 -to ss0[2]
 set_location_assignment PIN_AG28 -to ss0[1]
 set_location_assignment PIN_AH28 -to ss0[0]
-set_location_assignment PIN_AJ29 -to ss1[6]
-set_location_assignment PIN_AH29 -to ss1[5]
-set_location_assignment PIN_AH30 -to ss1[4]
-set_location_assignment PIN_AG30 -to ss1[3]
-set_location_assignment PIN_AF29 -to ss1[2]
-set_location_assignment PIN_AF30 -to ss1[1]
-set_location_assignment PIN_AD27 -to ss1[0]
-set_location_assignment PIN_V25 -to ss2[6]
-set_location_assignment PIN_AA28 -to ss2[5]
-set_location_assignment PIN_Y27 -to ss2[4]
-set_location_assignment PIN_AB27 -to ss2[3]
-set_location_assignment PIN_AB26 -to ss2[2]
-set_location_assignment PIN_AA26 -to ss2[1]
-set_location_assignment PIN_AA25 -to ss2[0]
 set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_square_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_square_wave_gen.v -section_id tb_square_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_FILE i2c_controller.v -section_id tb_i2c_controller
@@ -132,6 +130,4 @@ set_global_assignment -name EDA_TEST_BENCH_FILE i2s_controller.v -section_id tb_
 set_global_assignment -name EDA_TEST_BENCH_FILE i2s_controller.v -section_id tb_i2s_controller
 set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_i2s_controller
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_i2s_controller.v -section_id tb_i2s_controller
-set_location_assignment PIN_Y21 -to clk_indicator
-set_location_assignment PIN_V16 -to sda_indicator
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

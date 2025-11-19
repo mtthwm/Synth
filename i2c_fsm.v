@@ -24,7 +24,7 @@ module i2c_fsm (
     reg [6:0] addr;
     reg [3:0] state;
 
-    assign state_info = state;
+    // assign state_info = state;
 
     wire ready; 
     wire write_in_progress;
@@ -42,10 +42,11 @@ module i2c_fsm (
         .byte_reg(read_byte),
         .input_byte(input_byte),
         .scl(scl),
-        .sda(sda)
+        .sda(sda),
+        .state(state_info)
     );
 
-    always @(posedge clk, posedge reset) begin
+    always @(posedge write_in_progress, posedge ready, posedge reset) begin
         if (reset) begin
             state <= S_IDLE;
             prev_write_in_progress <= 1'b0;
@@ -53,12 +54,12 @@ module i2c_fsm (
             case (state)
                 S_IDLE: state <= S_WRITE_RESET_ADDR;
                 S_WRITE_RESET_ADDR: begin
-                    if (write_in_progress && prev_write_in_progress == 1'b0) begin
+                    if (write_in_progress) begin
                         state <= S_WRITE_RESET_VAL;
                     end
                 end
                 S_WRITE_RESET_VAL: begin
-                    if (write_in_progress && prev_write_in_progress == 1'b0) begin
+                    if (write_in_progress) begin
                         state <= S_PAUSE_0;
                     end
                 end
@@ -68,18 +69,17 @@ module i2c_fsm (
                     end
                 end
                 S_WRITE_AUDIO_INTERFACE_ADDR: begin
-                    if (write_in_progress && prev_write_in_progress == 1'b0) begin
+                    if (write_in_progress) begin
                         state <= S_WRITE_AUDIO_INTERFACE_VAL;
                     end
                 end
                 S_WRITE_AUDIO_INTERFACE_VAL: begin
-                    if (write_in_progress && prev_write_in_progress == 1'b0) begin
+                    if (write_in_progress) begin
                         state <= S_FINISHED;
                     end
                 end
                 S_FINISHED: state <= S_FINISHED;
             endcase
-            prev_write_in_progress <= write_in_progress;
         end
     end
 

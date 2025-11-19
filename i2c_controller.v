@@ -57,7 +57,6 @@ module i2c_controller (
 
     always @(posedge clk, posedge reset) begin
         if (reset) begin
-            state <= IDLE;
             slow_clk <= 1'b0;
             oop_clk <= 1'b0;
             clock_div <= 1'b0;
@@ -68,67 +67,69 @@ module i2c_controller (
                 oop_clk <= ~oop_clk;
             end
             clock_div <= ~clock_div;
+        end
+    end
 
-            if (oop_clk && clock_div) begin
-                case (state)
-                    SENDING_START: begin
+    always @(posedge oop_clk, posedge reset) begin
+        if (reset) begin
+            state <= IDLE;
+        end else begin
+            case (state)
+                IDLE: begin
+                    if (enable) begin
+                        state <= SENDING_START;
+                    end else begin
+                        state <= IDLE;
+                    end
+                end
+                SENDING_START: begin
+                    state <= SENDING_ADDR;
+                end
+                SENDING_ADDR: begin
+                    if (counter_8_out === 8'd8) begin
+                        state <= WAITING_ACK_0;
+                    end else begin
                         state <= SENDING_ADDR;
                     end
-                    SENDING_ADDR: begin
-                        if (counter_8_out === 8'd8) begin
-                            state <= WAITING_ACK_0;
-                        end else begin
-                            state <= SENDING_ADDR;
-                        end
+                end
+                WAITING_ACK_0: begin
+                    if (mode === READ) begin
+                        state <= RECEIVING_BYTE;
+                    end else begin
+                        transmit_byte <= input_byte;
+                        state <= WRITING_BYTE;
                     end
-                    WAITING_ACK_0: begin
-                        if (mode === READ) begin
-                            state <= RECEIVING_BYTE;
-                        end else begin
-                            transmit_byte <= input_byte;
-                            state <= WRITING_BYTE;
-                        end
+                end
+                RECEIVING_BYTE: begin
+                    if (counter_8_out === 8'd8) begin
+                        byte_reg <= read_byte;
+                        state <= SENDING_ACK;
+                    end else begin
+                        state <= RECEIVING_BYTE;
                     end
-                    RECEIVING_BYTE: begin
-                        if (counter_8_out === 8'd8) begin
-                            byte_reg <= read_byte;
-                            state <= SENDING_ACK;
-                        end else begin
-                            state <= RECEIVING_BYTE;
-                        end
+                end
+                WRITING_BYTE: begin
+                    if (counter_8_out === 8'd8) begin
+                        state <= WAITING_ACK_1;
+                    end else begin
+                        state <= WRITING_BYTE;
                     end
-                    WRITING_BYTE: begin
-                        if (counter_8_out === 8'd8) begin
-                            state <= WAITING_ACK_1;
-                        end else begin
-                            state <= WRITING_BYTE;
-                        end
+                end
+                WAITING_ACK_1: begin
+                    if (enable) begin
+                        transmit_byte <= input_byte;
+                        state <= WRITING_BYTE;
+                    end else begin
+                        state <= SENDING_STOP;
                     end
-                    WAITING_ACK_1: begin
-                        if (enable) begin
-                            transmit_byte <= input_byte;
-                            state <= WRITING_BYTE;
-                        end else begin
-                            state <= SENDING_STOP;
-                        end
-                    end
-                    SENDING_STOP: begin
-                        state <= IDLE;
-                    end
-                    default: begin
-                        state <= IDLE;
-                    end
-                endcase
-            end else begin
-                state <= state;
-            end
-            if (state == IDLE) begin
-                if (enable) begin
-                    state <= SENDING_START;
-                end else begin
+                end
+                SENDING_STOP: begin
                     state <= IDLE;
                 end
-            end
+                default: begin
+                    state <= IDLE;
+                end
+            endcase
         end
     end
 

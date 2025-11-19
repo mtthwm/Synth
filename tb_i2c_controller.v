@@ -18,7 +18,7 @@ module tb_i2c_controller ();
         .reset(reset),
         .enable(enable),
         .mode(mode),
-        .transmit_byte(transmit_byte),
+        .input_byte(transmit_byte),
         .byte_reg(read_byte),
         .ready(ready),
         .periph_addr(periph_addr),
