@@ -36,7 +36,7 @@ module i2c_controller (
 
     wire [7:0] counter_8_out;
     counter count8 (
-        .enable(1'b1),
+        .enable(sda !== 1'bz),
         .clk(oop_clk),
         .reset(counter_reset),
         .max(8'd8),
@@ -52,7 +52,7 @@ module i2c_controller (
         .value(clock_div_out)
     );
 
-    assign debug = clock_div_out;
+    assign debug = counter_8_out;
 
     wire [7:0] shiftreg_out;
     shiftreg sr (
@@ -157,7 +157,7 @@ module i2c_controller (
                 ready = 1'b0;
                 sda_driver =1'b0;
                 sda_mode = WRITE;
-                scl = slow_clk;
+                scl = 1'b1;
                 counter_reset = 1'b1;
                 enable_shiftreg = 1'b0;
             end

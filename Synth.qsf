@@ -57,7 +57,7 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_i2c_controller -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_i2c_fsm -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME tb_square_wave_gen -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_square_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_square_wave_gen -section_id tb_square_wave_gen
@@ -95,22 +95,6 @@ set_location_assignment PIN_AG27 -to ss0[3]
 set_location_assignment PIN_AF28 -to ss0[2]
 set_location_assignment PIN_AG28 -to ss0[1]
 set_location_assignment PIN_AH28 -to ss0[0]
-set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_square_wave_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_square_wave_gen.v -section_id tb_square_wave_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE i2c_controller.v -section_id tb_i2c_controller
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_i2c_controller.v -section_id tb_i2c_controller
-set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_i2c_controller
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_tone_gen.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE square_amp.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE tflipflop.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE tone_gen.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE shiftreg.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE i2s_controller.v -section_id tb_tone_gen
-set_global_assignment -name EDA_TEST_BENCH_FILE i2s_controller.v -section_id tb_i2s_controller
-set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_i2s_controller
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_i2s_controller.v -section_id tb_i2s_controller
 set_global_assignment -name VERILOG_FILE shiftreg.v
 set_global_assignment -name VERILOG_FILE square_wave_top.v
 set_global_assignment -name VERILOG_FILE i2c_test_top.v
@@ -131,4 +115,30 @@ set_global_assignment -name VERILOG_FILE tb_square_wave_gen.v
 set_global_assignment -name VERILOG_FILE square_wave_gen.v
 set_global_assignment -name VERILOG_FILE Synth.v
 set_global_assignment -name VERILOG_FILE gpio_test.v
+set_global_assignment -name EDA_TEST_BENCH_NAME tb_i2c_fsm -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_i2c_fsm
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_i2c_fsm -section_id tb_i2c_fsm
+set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_square_wave_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_square_wave_gen.v -section_id tb_square_wave_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE i2c_controller.v -section_id tb_i2c_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_i2c_controller.v -section_id tb_i2c_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_i2c_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_tone_gen.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE square_amp.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE tflipflop.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE tone_gen.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE shiftreg.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE i2s_controller.v -section_id tb_tone_gen
+set_global_assignment -name EDA_TEST_BENCH_FILE i2s_controller.v -section_id tb_i2s_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_i2s_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_i2s_controller.v -section_id tb_i2s_controller
+set_global_assignment -name EDA_TEST_BENCH_FILE i2c_controller.v -section_id tb_i2c_fsm
+set_global_assignment -name EDA_TEST_BENCH_FILE i2c_fsm.v -section_id tb_i2c_fsm
+set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_i2c_fsm
+set_global_assignment -name EDA_TEST_BENCH_FILE shiftreg.v -section_id tb_i2c_fsm
+set_global_assignment -name EDA_TEST_BENCH_FILE tflipflop.v -section_id tb_i2c_fsm
+set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_i2c_fsm
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_i2c_fsm.v -section_id tb_i2c_fsm
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
