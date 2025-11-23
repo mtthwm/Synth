@@ -27,7 +27,6 @@ module i2c_controller (
     reg sda_mode;
     reg slow_clk;
     reg oop_clk;
-    reg clock_div;
     reg enable_shiftreg;
     reg [7:0] transmit_byte;
 
@@ -40,11 +39,20 @@ module i2c_controller (
         .enable(1'b1),
         .clk(oop_clk),
         .reset(counter_reset),
-        .max(8'd9),
+        .max(8'd8),
         .value(counter_8_out)
     );
 
-    assign debug = state;
+    wire [7:0] clock_div_out;
+    counter clock_div (
+        .enable(1'b1),
+        .clk(clk),
+        .reset(reset),
+        .max(8'd2),
+        .value(clock_div_out)
+    );
+
+    assign debug = clock_div_out;
 
     wire [7:0] shiftreg_out;
     shiftreg sr (
@@ -59,14 +67,13 @@ module i2c_controller (
         if (reset) begin
             slow_clk <= 1'b0;
             oop_clk <= 1'b0;
-            clock_div <= 1'b0;
         end else begin
-            if (clock_div) begin
+            if (clock_div_out === 8'd1) begin
                 slow_clk <= ~slow_clk;
-            end else begin
+            end
+            if (clock_div_out === 8'd0) begin
                 oop_clk <= ~oop_clk;
             end
-            clock_div <= ~clock_div;
         end
     end
 
@@ -86,7 +93,7 @@ module i2c_controller (
                     state <= SENDING_ADDR;
                 end
                 SENDING_ADDR: begin
-                    if (counter_8_out === 8'd8) begin
+                    if (counter_8_out === 8'd7) begin
                         state <= WAITING_ACK_0;
                     end else begin
                         state <= SENDING_ADDR;
@@ -101,7 +108,7 @@ module i2c_controller (
                     end
                 end
                 RECEIVING_BYTE: begin
-                    if (counter_8_out === 8'd8) begin
+                    if (counter_8_out === 8'd7) begin
                         byte_reg <= read_byte;
                         state <= SENDING_ACK;
                     end else begin
@@ -109,7 +116,7 @@ module i2c_controller (
                     end
                 end
                 WRITING_BYTE: begin
-                    if (counter_8_out === 8'd8) begin
+                    if (counter_8_out === 8'd7) begin
                         state <= WAITING_ACK_1;
                     end else begin
                         state <= WRITING_BYTE;
@@ -139,7 +146,7 @@ module i2c_controller (
     always @(*) begin
         case (state)
             IDLE: begin
-                ready = ~enable;
+                ready = 1'b1;
                 sda_driver = 1'b1;
                 sda_mode = WRITE;
                 scl = 1'b1;
