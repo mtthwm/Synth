@@ -13,13 +13,16 @@ module i2c_fsm (
     parameter WM8731_AUDIO_INTERFACE_VAL = 8'b1000_0000;
     parameter WM8731_SAMP_CTRL_ADDR = 8'b0000_1000;
 
-    parameter S_IDLE = 4'd0;
-    parameter S_WRITE_RESET_ADDR = 4'd1;
-    parameter S_WRITE_RESET_VAL = 4'd2;
-    parameter S_PAUSE_0 = 4'd3;
-    parameter S_WRITE_AUDIO_INTERFACE_ADDR = 4'd4;
-    parameter S_WRITE_AUDIO_INTERFACE_VAL = 4'd5;
-    parameter S_FINISHED = 4'd15;
+    parameter S_WRITE_RESET_ADDR = 0;
+    parameter S_WRITE_RESET_VAL = 1;
+    parameter S_PAUSE_0 = 2;
+    parameter S_WRITE_AUDIO_INTERFACE_ADDR = 3;
+    parameter S_WRITE_AUDIO_INTERFACE_VAL = 4;
+    parameter S_FINISHED = 5;
+    parameter S_WAIT_FOR_WRITE_FINISH_0 = 6;
+    parameter S_WAIT_FOR_WRITE_FINISH_1 = 7;
+    parameter S_WAIT_FOR_WRITE_FINISH_2 = 8;
+
 
     reg mode;
     reg [7:0] input_byte;
@@ -48,18 +51,28 @@ module i2c_fsm (
         .debug(debug)
     );
 
-    always @(posedge write_in_progress, posedge ready, posedge reset) begin
+    always @(posedge clk, posedge reset) begin
         if (reset) begin
             state <= S_WRITE_RESET_ADDR;
         end else begin
             case (state)
                 S_WRITE_RESET_ADDR: begin
                     if (write_in_progress) begin
+                        state <= S_WAIT_FOR_WRITE_FINISH_0;
+                    end
+                end
+                S_WAIT_FOR_WRITE_FINISH_0: begin
+                    if (!write_in_progress) begin
                         state <= S_WRITE_RESET_VAL;
                     end
                 end
                 S_WRITE_RESET_VAL: begin
                     if (write_in_progress) begin
+                        state <= S_WAIT_FOR_WRITE_FINISH_1;
+                    end
+                end
+                S_WAIT_FOR_WRITE_FINISH_1: begin
+                    if (!write_in_progress) begin
                         state <= S_PAUSE_0;
                     end
                 end
@@ -70,6 +83,11 @@ module i2c_fsm (
                 end
                 S_WRITE_AUDIO_INTERFACE_ADDR: begin
                     if (write_in_progress) begin
+                        state <= S_WAIT_FOR_WRITE_FINISH_2;
+                    end
+                end
+                S_WAIT_FOR_WRITE_FINISH_2: begin
+                    if (!write_in_progress) begin
                         state <= S_WRITE_AUDIO_INTERFACE_VAL;
                     end
                 end
@@ -79,18 +97,15 @@ module i2c_fsm (
                     end
                 end
                 S_FINISHED: state <= S_FINISHED;
+                default: state <= S_WRITE_RESET_ADDR;
             endcase
         end
     end
 
     always @(*) begin
-        addr = WM8731_PERIPH_ADDR;
+        addr = WM8731_PERIPH_ADDR[6:0];
         mode = 1'b1;
         case (state)
-            S_IDLE: begin
-                input_byte = 8'b0;
-                enable = 1'b0;
-            end
             S_WRITE_RESET_ADDR: begin
                 input_byte = WM8731_RESET_ADDR;
                 enable = 1'b1;
@@ -112,6 +127,10 @@ module i2c_fsm (
                 enable = 1'b1;
             end
             S_FINISHED: begin
+                input_byte = 8'b0;
+                enable = 1'b0;
+            end
+            default: begin
                 input_byte = 8'b0;
                 enable = 1'b0;
             end

@@ -9,9 +9,10 @@ module square_wave_top (
 );
 
     parameter MAIN_CLK_SPEED = 32'd50_000_000;
-    parameter SLOW_CLK_SPEED = 32'd12_000_000;
+    parameter SLOW_CLK_SPEED = 32'd1_000_000;
 
     wire [15:0] _samp_out, _tg1_per;
+    wire [7:0] debug;
     wire _sw1_out;
     wire slow_clk;
     wire i2c_state_info;
@@ -19,7 +20,7 @@ module square_wave_top (
 
     assign gpio_debug[0] = sda;
     assign gpio_debug[1] = scl;
-    assign gpio_debug[2] = slow_clk;
+    assign gpio_debug[2] = debug[4];
 
     assign chip_clk = slow_clk;
 
@@ -60,7 +61,8 @@ module square_wave_top (
         .sda(sda),
         .scl(scl),
         .read_byte(i2c_byte_out),
-        .state_info(i2c_state_info)
+        .state_info(i2c_state_info),
+        .debug(debug)
     );
 
     i2s_controller is (

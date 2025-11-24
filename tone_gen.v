@@ -2,20 +2,20 @@ module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
     input wire [3:0] tone,
     output reg [31:0] period
 );
-    parameter A4 = 0;
-    parameter B4 = 1;
-    parameter C4 = 2;
-    parameter D4 = 3;
-    parameter E4 = 4;
-    parameter F4 = 5;
-    parameter G4 = 6;
-    parameter A5 = 7;
-    parameter B5 = 8;
-    parameter C5 = 9;
-    parameter D5 = 10;
-    parameter E5 = 11;
-    parameter F5 = 12;
-    parameter G5 = 13;
+    parameter A4 = 4'd0;
+    parameter B4 = 4'd1;
+    parameter C4 = 4'd2;
+    parameter D4 = 4'd3;
+    parameter E4 = 4'd4;
+    parameter F4 = 4'd5;
+    parameter G4 = 4'd6;
+    parameter A5 = 4'd7;
+    parameter B5 = 4'd8;
+    parameter C5 = 4'd9;
+    parameter D5 = 4'd10;
+    parameter E5 = 4'd11;
+    parameter F5 = 4'd12;
+    parameter G5 = 4'd13;
 
     parameter A4_FREQ = 32'd233;
     parameter B4_FREQ = 32'd247;

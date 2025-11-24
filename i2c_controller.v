@@ -52,7 +52,14 @@ module i2c_controller (
         .value(clock_div_out)
     );
 
-    assign debug = counter_8_out;
+    assign debug[0] = state[0];
+    assign debug[1] = state[1];
+    assign debug[2] = state[2];
+    assign debug[3] = state[3];
+    assign debug[4] = enable;
+    assign debug[5] = 1'b0;
+    assign debug[6] = 1'b0;
+    assign debug[7] = 1'b0;
 
     wire [7:0] shiftreg_out;
     shiftreg sr (

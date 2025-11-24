@@ -11,7 +11,7 @@ module shiftreg (
         end else begin
             if (enable) begin
                 value[index] <= data; 
-                index <= index + 1;
+                index <= index + 3'd1;
             end
         end
     end
