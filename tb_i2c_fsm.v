@@ -5,6 +5,9 @@ module tb_i2c_fsm ();
     wire sda;
     wire [3:0] state;
     wire [7:0] debug;
+    wire enable;
+
+    assign enable = debug[4];
 
     i2c_fsm i2fsm (
         .clk(clk),

@@ -22,6 +22,7 @@ module i2c_fsm (
     parameter S_WAIT_FOR_WRITE_FINISH_0 = 6;
     parameter S_WAIT_FOR_WRITE_FINISH_1 = 7;
     parameter S_WAIT_FOR_WRITE_FINISH_2 = 8;
+    parameter S_WAIT_FOR_WRITE_FINISH_3 = 9;
 
 
     reg mode;
@@ -29,11 +30,13 @@ module i2c_fsm (
     reg [6:0] addr;
     reg [3:0] state;
 
-    // assign state_info = state;
+    assign state_info = state;
 
     wire ready; 
     wire write_in_progress;
     reg enable;
+
+    assign debug[4] = enable;
 
     i2c_controller i2c_ctl (
         .clk(clk),
@@ -46,9 +49,9 @@ module i2c_fsm (
         .byte_reg(read_byte),
         .input_byte(input_byte),
         .scl(scl),
-        .sda(sda),
-        .state(state_info),
-        .debug(debug)
+        .sda(sda)
+        // .state(state_info)
+        // .debug(debug)
     );
 
     always @(posedge clk, posedge reset) begin
@@ -93,10 +96,19 @@ module i2c_fsm (
                 end
                 S_WRITE_AUDIO_INTERFACE_VAL: begin
                     if (write_in_progress) begin
+                        state <= S_WAIT_FOR_WRITE_FINISH_3;
+                    end
+                end
+                S_WAIT_FOR_WRITE_FINISH_3: begin
+                    if (!write_in_progress) begin
                         state <= S_FINISHED;
                     end
                 end
-                S_FINISHED: state <= S_FINISHED;
+                S_FINISHED: begin
+                    if (ready) begin
+                        state <= S_WRITE_RESET_ADDR;
+                    end
+                end
                 default: state <= S_WRITE_RESET_ADDR;
             endcase
         end
@@ -106,11 +118,11 @@ module i2c_fsm (
         addr = WM8731_PERIPH_ADDR[6:0];
         mode = 1'b1;
         case (state)
-            S_WRITE_RESET_ADDR: begin
+            S_WRITE_RESET_ADDR, S_WAIT_FOR_WRITE_FINISH_0: begin
                 input_byte = WM8731_RESET_ADDR;
                 enable = 1'b1;
             end
-            S_WRITE_RESET_VAL: begin
+            S_WRITE_RESET_VAL, S_WAIT_FOR_WRITE_FINISH_1: begin
                 input_byte = 8'b0;
                 enable = 1'b1;
             end
@@ -118,11 +130,11 @@ module i2c_fsm (
                 input_byte = 8'b0;
                 enable = 1'b0;
             end
-            S_WRITE_AUDIO_INTERFACE_ADDR: begin
+            S_WRITE_AUDIO_INTERFACE_ADDR, S_WAIT_FOR_WRITE_FINISH_2: begin
                 input_byte = WM8731_AUDIO_INTERFACE_ADDR;
                 enable = 1'b1;
             end
-            S_WRITE_AUDIO_INTERFACE_VAL: begin
+            S_WRITE_AUDIO_INTERFACE_VAL, S_WAIT_FOR_WRITE_FINISH_3: begin
                 input_byte = WM8731_AUDIO_INTERFACE_VAL;
                 enable = 1'b1;
             end

@@ -9,7 +9,7 @@ module square_wave_top (
 );
 
     parameter MAIN_CLK_SPEED = 32'd50_000_000;
-    parameter SLOW_CLK_SPEED = 32'd1_000_000;
+    parameter SLOW_CLK_SPEED = 32'd250_000;
 
     wire [15:0] _samp_out, _tg1_per;
     wire [7:0] debug;
