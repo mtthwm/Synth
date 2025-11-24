@@ -12,7 +12,7 @@ module square_wave_gen (
 			t = 32'd0;
 			value <= 1'b0;
 		end else begin
-			if (t === period) begin
+			if (t >= period) begin
 				t <= 32'b0;
 			end else begin
 				t <= t + 32'b1;

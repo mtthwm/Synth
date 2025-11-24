@@ -18,9 +18,9 @@ module square_wave_top (
     wire i2c_state_info;
     wire i2c_byte_out;
 
-    assign gpio_debug[0] = sda;
-    assign gpio_debug[1] = scl;
-    assign gpio_debug[2] = debug[4];
+    assign gpio_debug[0] = _sw1_out;
+    assign gpio_debug[1] = bit_clk;
+    assign gpio_debug[2] = data;
 
     assign chip_clk = slow_clk;
 
