@@ -1,5 +1,5 @@
 module i2c_fsm (
-    input wire clk, reset,
+    input wire clk, reset, one_shot,
     inout wire sda,
     output wire scl,
     output wire [7:0] read_byte,
@@ -12,6 +12,9 @@ module i2c_fsm (
     parameter WM8731_AUDIO_INTERFACE_ADDR = 8'b0000_0111;
     parameter WM8731_AUDIO_INTERFACE_VAL = 8'b1000_0000;
     parameter WM8731_SAMP_CTRL_ADDR = 8'b0000_1000;
+    parameter WM8731_SAMP_CTRL_VAL = 8'b0000_0000;
+    parameter WM8731_ACTIVE_CTRL_ADDR = 8'b0000_1001;
+    parameter WM8731_ACTIVE_CTRL_VAL = 8'b0000_0001;
 
     parameter S_WRITE_RESET_ADDR = 0;
     parameter S_WRITE_RESET_VAL = 1;
@@ -23,6 +26,12 @@ module i2c_fsm (
     parameter S_WAIT_FOR_WRITE_FINISH_1 = 7;
     parameter S_WAIT_FOR_WRITE_FINISH_2 = 8;
     parameter S_WAIT_FOR_WRITE_FINISH_3 = 9;
+    parameter S_WAIT_FOR_WRITE_FINISH_4 = 10;
+    parameter S_WAIT_FOR_WRITE_FINISH_5 = 11;
+    parameter S_PAUSE_1 = 12;
+    parameter S_PAUSE_2 = 13;
+    parameter S_WRITE_ACTIVE_CTRL_ADDR = 14;
+    parameter S_WRITE_ACTIVE_CTRL_VAL = 15;
 
 
     reg mode;
@@ -101,12 +110,36 @@ module i2c_fsm (
                 end
                 S_WAIT_FOR_WRITE_FINISH_3: begin
                     if (!write_in_progress) begin
+                        state <= S_PAUSE_1;
+                    end
+                end
+                S_PAUSE_1: begin
+                    if (ready) begin
+                        state <= S_WRITE_ACTIVE_CTRL_ADDR;
+                    end
+                end
+                S_WRITE_ACTIVE_CTRL_ADDR: begin
+                    if (write_in_progress) begin
+                        state <= S_WAIT_FOR_WRITE_FINISH_4;
+                    end
+                end
+                S_WAIT_FOR_WRITE_FINISH_4: begin
+                    if (!write_in_progress) begin
+                        state <= S_WRITE_ACTIVE_CTRL_VAL;
+                    end
+                end
+                S_WRITE_ACTIVE_CTRL_VAL: begin
+                    if (write_in_progress) begin
                         state <= S_FINISHED;
                     end
                 end
                 S_FINISHED: begin
                     if (ready) begin
-                        state <= S_WRITE_RESET_ADDR;
+                        if (one_shot) begin
+                            state <= S_FINISHED;
+                        end else begin
+                            state <= S_WRITE_RESET_ADDR;
+                        end
                     end
                 end
                 default: state <= S_WRITE_RESET_ADDR;
@@ -136,6 +169,18 @@ module i2c_fsm (
             end
             S_WRITE_AUDIO_INTERFACE_VAL, S_WAIT_FOR_WRITE_FINISH_3: begin
                 input_byte = WM8731_AUDIO_INTERFACE_VAL;
+                enable = 1'b1;
+            end
+            S_PAUSE_1: begin
+                input_byte = 8'b0;
+                enable = 1'b0;
+            end
+            S_WRITE_ACTIVE_CTRL_ADDR, S_WAIT_FOR_WRITE_FINISH_4: begin
+                input_byte = WM8731_ACTIVE_CTRL_ADDR;
+                enable = 1'b1;
+            end
+            S_WRITE_ACTIVE_CTRL_VAL: begin
+                input_byte = WM8731_ACTIVE_CTRL_VAL;
                 enable = 1'b1;
             end
             S_FINISHED: begin

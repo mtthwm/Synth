@@ -62,7 +62,8 @@ module square_wave_top (
         .scl(scl),
         .read_byte(i2c_byte_out),
         .state_info(i2c_state_info),
-        .debug(debug)
+        .debug(debug),
+        .one_shot(1'b1)
     );
 
     i2s_controller is (
