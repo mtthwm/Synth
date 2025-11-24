@@ -20,7 +20,8 @@ module i2c_controller (
     parameter SENDING_ACK       = 4'd6;
     parameter WRITING_BYTE      = 4'd7;
     parameter WAITING_ACK_1     = 4'd8;
-    parameter SENDING_STOP      = 4'd9;
+    parameter START_SEND_STOP   = 4'd9;
+    parameter FINISH_SEND_STOP  = 4'd10;
 
     reg counter_reset;
     reg sda_driver;
@@ -134,10 +135,13 @@ module i2c_controller (
                         transmit_byte <= input_byte;
                         state <= WRITING_BYTE;
                     end else begin
-                        state <= SENDING_STOP;
+                        state <= START_SEND_STOP;
                     end
                 end
-                SENDING_STOP: begin
+                START_SEND_STOP: begin
+                    state <= FINISH_SEND_STOP;
+                end
+                FINISH_SEND_STOP: begin
                     state <= IDLE;
                 end
                 default: begin
@@ -226,7 +230,15 @@ module i2c_controller (
                 counter_reset = 1'b0;
                 enable_shiftreg = 1'b0;
             end
-            SENDING_STOP: begin
+            START_SEND_STOP: begin
+                ready = 1'b0;
+                sda_driver = 1'b0;
+                sda_mode = WRITE;
+                scl = 1'b1;
+                counter_reset = 1'b0;
+                enable_shiftreg = 1'b0;
+            end
+            FINISH_SEND_STOP: begin
                 ready = 1'b0;
                 sda_driver = 1'b1;
                 sda_mode = WRITE;
