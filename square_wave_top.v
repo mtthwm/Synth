@@ -37,10 +37,11 @@ module square_wave_top (
         .value(slow_clk)
     );
 
-    noise_gen ng (
+    square_wave_gen swg (
         .clk(slow_clk),
         .reset(reset),
-        // .period(_tg1_per),
+        .period(_tg1_per),
+        .duty_cycle(_tg1_per >> 1),
         .value(_samp_out)
 
     );

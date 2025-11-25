@@ -1,6 +1,6 @@
 module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
-    input wire [3:0] tone,
-    output reg [31:0] period
+    input wire [3:0] tone0, tone1, tone2, tone3,
+    output reg [31:0] period0, period1, period2, period3
 );
     parameter SILENT = 4'd0;
     parameter A4 = 4'd1;
@@ -52,24 +52,81 @@ module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
     parameter A6_period = CLOCK_SPEED / A6_FREQ;
 
     always @(*) begin
-        case (tone)
-            SILENT: period = 32'd0;
-            A4: period = A4_period;
-            B4: period = B4_period;
-            C4: period = C4_period;
-            D4: period = D4_period;
-            E4: period = E4_period;
-            F4: period = F4_period;
-            G4: period = G4_period;
-            A5: period = A5_period;
-            B5: period = B5_period;
-            C5: period = C5_period;
-            D5: period = D5_period;
-            E5: period = E5_period;
-            F5: period = F5_period;
-            G5: period = G5_period;
-            A6: period = A6_period;
-            default: period = C4_period;
+        case (tone0)
+            SILENT: period0 = 32'd0;
+            A4: period0 = A4_period;
+            B4: period0 = B4_period;
+            C4: period0 = C4_period;
+            D4: period0 = D4_period;
+            E4: period0 = E4_period;
+            F4: period0 = F4_period;
+            G4: period0 = G4_period;
+            A5: period0 = A5_period;
+            B5: period0 = B5_period;
+            C5: period0 = C5_period;
+            D5: period0 = D5_period;
+            E5: period0 = E5_period;
+            F5: period0 = F5_period;
+            G5: period0 = G5_period;
+            A6: period0 = A6_period;
+            default: period0 = C4_period;
+        endcase
+        case (tone1)
+            SILENT: period1 = 32'd0;
+            A4: period1 = A4_period;
+            B4: period1 = B4_period;
+            C4: period1 = C4_period;
+            D4: period1 = D4_period;
+            E4: period1 = E4_period;
+            F4: period1 = F4_period;
+            G4: period1 = G4_period;
+            A5: period1 = A5_period;
+            B5: period1 = B5_period;
+            C5: period1 = C5_period;
+            D5: period1 = D5_period;
+            E5: period1 = E5_period;
+            F5: period1 = F5_period;
+            G5: period1 = G5_period;
+            A6: period1 = A6_period;
+            default: period1 = C4_period;
+        endcase
+        case (tone2)
+            SILENT: period2 = 32'd0;
+            A4: period2 = A4_period;
+            B4: period2 = B4_period;
+            C4: period2 = C4_period;
+            D4: period2 = D4_period;
+            E4: period2 = E4_period;
+            F4: period2 = F4_period;
+            G4: period2 = G4_period;
+            A5: period2 = A5_period;
+            B5: period2 = B5_period;
+            C5: period2 = C5_period;
+            D5: period2 = D5_period;
+            E5: period2 = E5_period;
+            F5: period2 = F5_period;
+            G5: period2 = G5_period;
+            A6: period2 = A6_period;
+            default: period2 = C4_period;
+        endcase
+        case (tone3)
+            SILENT: period3 = 32'd0;
+            A4: period3 = A4_period;
+            B4: period3 = B4_period;
+            C4: period3 = C4_period;
+            D4: period3 = D4_period;
+            E4: period3 = E4_period;
+            F4: period3 = F4_period;
+            G4: period3 = G4_period;
+            A5: period3 = A5_period;
+            B5: period3 = B5_period;
+            C5: period3 = C5_period;
+            D5: period3 = D5_period;
+            E5: period3 = E5_period;
+            F5: period3 = F5_period;
+            G5: period3 = G5_period;
+            A6: period3 = A6_period;
+            default: period3 = C4_period;
         endcase
     end
 
