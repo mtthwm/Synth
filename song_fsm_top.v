@@ -16,8 +16,9 @@ module song_fsm_top (
 
     wire _sw0_out;
     wire _sw1_out;
+    wire _sw2_out;
     wire [7:0] _sw0_amp;
-    wire [7:0] _sw1_amp;
+    wire [7:0] _sw1_amp, _sw2_amp;
     wire [7:0] _triangle_wave_out;
     wire [7:0] _noise_wave_out;
 
@@ -106,6 +107,14 @@ module song_fsm_top (
         .value(_sw1_out)
     );
 
+    square_wave_gen swg2 (
+        .clk(slow_clk),
+        .reset(reset),
+        .period(_tg2_per),
+        .duty_cycle(_tg2_per >> 2),
+        .value(_sw2_out)
+    );
+
     square_amp sa0 (
         .in(_sw0_out),
         .out(_sw0_amp)
@@ -116,12 +125,17 @@ module song_fsm_top (
         .out(_sw1_amp)
     );
 
-    triangle_wave_gen twg (
-        .clk(slow_clk),
-        .reset(reset),
-        .period(_tg2_per),
-        .value(_triangle_wave_out)
+    square_amp sa2 (
+        .in(_sw2_out),
+        .out(_sw2_amp)
     );
+
+    // triangle_wave_gen twg (
+    //     .clk(slow_clk),
+    //     .reset(reset),
+    //     .period(_tg2_per),
+    //     .value(_triangle_wave_out)
+    // );
 
     noise_gen ng (
         .clk(slow_clk),
@@ -133,7 +147,7 @@ module song_fsm_top (
     mix4 mixer (
         .samp0(_sw0_amp),
         .samp1(_sw1_amp),
-        .samp2(_triangle_wave_out),
+        .samp2(_sw2_amp),
         .samp3(_noise_wave_out),
         .samp_out(_samp_out)
     );

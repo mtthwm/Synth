@@ -17,7 +17,7 @@ module bram
 	
 	// FOR QUESTA SIMULATION ONLY
 	initial begin
-		$readmemh("program_to_load.hex", ram);
+		$readmemh("song.hex", ram);
 	end
 
 	// Port A 
@@ -30,19 +30,6 @@ module bram
 		end
 		else begin
 			q_a <= ram[addr_a];		//read
-		end 
-	end 
-
-	// Port B 
-	always @ (posedge clk)
-	begin
-		if (we_b) 
-		begin
-			ram[addr_b] <= data_b;	//write
-			q_b <= data_b;
-		end
-		else begin
-			q_b <= ram[addr_b];	//read
 		end 
 	end
 
