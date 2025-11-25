@@ -18,6 +18,7 @@ module lsfr (
             index <= 4'd0;
         end else begin
             index <= index + 4'd1;
+            sreg[15] <= sreg[0] ^ sreg[2] ^ sreg[3] ^ sreg[5];
             sreg[14] <= sreg[15]; 
             sreg[13] <= sreg[14]; 
             sreg[12] <= sreg[13]; 
@@ -38,10 +39,6 @@ module lsfr (
                 data <= buff;
             end
         end
-    end
-
-    always @(*) begin
-        sreg[15] = sreg[0] ^ sreg[2] ^ sreg[3] ^ sreg[5];
     end
 
 endmodule

@@ -37,10 +37,10 @@ module square_wave_top (
         .value(slow_clk)
     );
 
-    triangle_wave_gen twg (
+    noise_gen ng (
         .clk(slow_clk),
         .reset(reset),
-        .period(_tg1_per),
+        // .period(_tg1_per),
         .value(_samp_out)
 
     );
