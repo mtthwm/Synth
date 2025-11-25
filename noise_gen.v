@@ -12,6 +12,6 @@ module noise_gen (
         .data(rng_out)
     );
 
-    assign value = period ? rng_out[7:0] : 32'd0;
+    assign value = period ? {2'd0, rng_out[5:0]} : 8'd0;
 
 endmodule

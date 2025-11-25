@@ -8,10 +8,10 @@ module tb_triangle_wave_gen ();
     always #1 clk <= ~clk;
     initial clk <= 1'h0;
 
-    noise_gen tg (
+    triangle_wave_gen tg (
         .clk(clk),
         .reset(reset),
-        // .period(period),
+        .period(period),
         .value(gen_out)
     );
 

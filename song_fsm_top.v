@@ -3,23 +3,23 @@ module song_fsm_top (
     inout wire sda,
     output wire scl,
     output wire bit_clk, data, frame_clk, chip_clk,
-    output wire [6:0] ss0, ss1, ss2, ss3
+    output wire [6:0] ss0, ss1, ss2, ss3,
+    output wire [7:0] debug
 );
 
     parameter MAIN_CLK_SPEED = 32'd50_000_000;
     parameter SLOW_CLK_SPEED = 32'd12_288_000;
-    parameter SONG_SPEED = 32'd4;
+    parameter SONG_SPEED = 32'd1;
 
     wire [15:0] _samp_out;
     wire [31:0] _tg0_per, _tg1_per, _tg2_per, _tg3_per;
-    wire [7:0] debug;
 
     wire _sw0_out;
     wire _sw1_out;
-    wire _sw0_amp;
-    wire _sw1_amp;
-    wire _triangle_wave_out;
-    wire _noise_wave_out;
+    wire [7:0] _sw0_amp;
+    wire [7:0] _sw1_amp;
+    wire [7:0] _triangle_wave_out;
+    wire [7:0] _noise_wave_out;
 
     wire slow_clk;
     wire note_clk;
@@ -29,25 +29,28 @@ module song_fsm_top (
     wire [3:0] tone0, tone1, tone2, tone3;
 
     assign chip_clk = slow_clk;
+    assign debug[0] = frame_clk;
+    assign debug[1] = bit_clk;
+    assign debug[2] = data;
 
     sevenseg disp0 (
         .bcd(tone0),
-        .seven_seg(ss0)
+        .seven_seg(ss3)
     );
 
     sevenseg disp1 (
         .bcd(tone1),
-        .seven_seg(ss1)
+        .seven_seg(ss2)
     );
 
     sevenseg disp2 (
         .bcd(tone2),
-        .seven_seg(ss2)
+        .seven_seg(ss1)
     );
 
     sevenseg disp3 (
-        .bcd(tone1),
-        .seven_seg(ss3)
+        .bcd(tone3),
+        .seven_seg(ss0)
     );
 
     song_fsm sf (
@@ -99,7 +102,7 @@ module song_fsm_top (
         .clk(slow_clk),
         .reset(reset),
         .period(_tg1_per),
-        .duty_cycle(_tg1_per >> 1),
+        .duty_cycle(_tg1_per >> 2),
         .value(_sw1_out)
     );
 
@@ -116,7 +119,7 @@ module song_fsm_top (
     triangle_wave_gen twg (
         .clk(slow_clk),
         .reset(reset),
-        .period(_tg1_per),
+        .period(_tg2_per),
         .value(_triangle_wave_out)
     );
 
@@ -142,7 +145,6 @@ module song_fsm_top (
         .scl(scl),
         .read_byte(i2c_byte_out),
         .state_info(i2c_state_info),
-        .debug(debug),
         .one_shot(1'b1)
     );
 
