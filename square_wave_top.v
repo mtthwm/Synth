@@ -37,22 +37,17 @@ module square_wave_top (
         .value(slow_clk)
     );
 
-    square_wave_gen sw (
+    triangle_wave_gen twg (
         .clk(slow_clk),
         .reset(reset),
         .period(_tg1_per),
-        .duty_cycle(_tg1_per >> 1),
-        .value(_sw1_out)
+        .value(_samp_out)
+
     );
 
     sevenseg ssm0 (
       .bcd(i2c_state_info),
       .seven_seg(ss0)  
-    );
-
-    square_amp sa (
-        .in(_sw1_out),
-        .out(_samp_out)
     );
 
     i2c_fsm i2fsm (

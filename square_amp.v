@@ -1,10 +1,10 @@
 module square_amp (
     input wire in,
-    output wire [15:0] out
+    output wire [7:0] out
 );
 
-    parameter GAIN = 16'd32768;
+    parameter GAIN = 10'd255;
 
-    assign out = in ? GAIN : 16'd0;
+    assign out = in ? GAIN : 10'd0;
 
 endmodule
