@@ -5,6 +5,7 @@ module beat_counter #(
 
     input clk, reset,
     input wire [9:0] start_addr, end_addr,
+    output wire note_clk_out,
     output wire [9:0] beat_addr
 );
 
@@ -20,17 +21,21 @@ module beat_counter #(
     );
 
     reg [9:0] counter;
+    reg began;
 
     assign beat_addr = counter;
+    assign note_clk_out = note_clk;
 
     always @(posedge note_clk, posedge reset) begin
         if (reset) begin
             counter <= start_addr;
+            began <= 1'b0;
         end else begin
-            counter <= counter + 10'd1;
-
-            if (counter === end_addr) begin
+            if (!began || counter === end_addr-1) begin
                 counter <= start_addr;
+                began <= 1'b1;
+            end else begin
+                counter <= counter + 10'd1;
             end
         end
     end

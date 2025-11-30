@@ -39,7 +39,7 @@
 
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CSEMA5F31C6
-set_global_assignment -name TOP_LEVEL_ENTITY song_fsm_top
+set_global_assignment -name TOP_LEVEL_ENTITY apu
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 24.1STD.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "09:50:50  SEPTEMBER 17, 2025"
 set_global_assignment -name LAST_QUARTUS_VERSION "24.1std.0 Lite Edition"
@@ -57,7 +57,7 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_beat_counter -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_apu -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME tb_square_wave_gen -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_square_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_square_wave_gen -section_id tb_square_wave_gen
@@ -91,9 +91,6 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_i2c_fsm -section_id tb
 set_global_assignment -name EDA_TEST_BENCH_NAME tb_triangle_wave_gen -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_triangle_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_triangle_wave_gen -section_id tb_triangle_wave_gen
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_location_assignment PIN_AJ29 -to ss1[6]
 set_location_assignment PIN_AH29 -to ss1[5]
 set_location_assignment PIN_AH30 -to ss1[4]
@@ -118,6 +115,11 @@ set_location_assignment PIN_AB22 -to ss3[0]
 set_location_assignment PIN_AC18 -to debug[0]
 set_location_assignment PIN_Y17 -to debug[1]
 set_location_assignment PIN_AD17 -to debug[2]
+set_global_assignment -name EDA_TEST_BENCH_NAME tb_beat_counter -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_beat_counter
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_beat_counter -section_id tb_beat_counter
+set_global_assignment -name VERILOG_FILE tb_apu.v
+set_global_assignment -name VERILOG_FILE apu.v
 set_global_assignment -name VERILOG_FILE tb_beat_counter.v
 set_global_assignment -name VERILOG_FILE beat_counter.v
 set_global_assignment -name VERILOG_FILE mix4.v
@@ -148,6 +150,9 @@ set_global_assignment -name VERILOG_FILE tb_square_wave_gen.v
 set_global_assignment -name VERILOG_FILE square_wave_gen.v
 set_global_assignment -name VERILOG_FILE Synth.v
 set_global_assignment -name VERILOG_FILE gpio_test.v
+set_global_assignment -name EDA_TEST_BENCH_NAME tb_apu -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_apu -section_id tb_apu
 set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_square_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_square_wave_gen.v -section_id tb_square_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_FILE i2c_controller.v -section_id tb_i2c_controller
@@ -175,9 +180,23 @@ set_global_assignment -name EDA_TEST_BENCH_FILE triangle_wave_gen.v -section_id 
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_triangle_wave_gen.v -section_id tb_triangle_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_FILE lsfr.v -section_id tb_triangle_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_FILE noise_gen.v -section_id tb_triangle_wave_gen
-set_global_assignment -name EDA_TEST_BENCH_NAME tb_beat_counter -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_beat_counter
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_beat_counter -section_id tb_beat_counter
 set_global_assignment -name EDA_TEST_BENCH_FILE beat_counter.v -section_id tb_beat_counter
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_beat_counter.v -section_id tb_beat_counter
+set_global_assignment -name EDA_TEST_BENCH_FILE apu.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE beat_counter.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE bram.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE lsfr.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE mix4.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE noise_gen.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE i2c_controller.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE i2s_controller.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE tone_gen.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE triangle_wave_gen.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_apu.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE square_amp.v -section_id tb_apu
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
