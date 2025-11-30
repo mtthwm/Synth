@@ -7,6 +7,7 @@ module apu #(parameter MAIN_CLK_SPEED = 32'd50_000_000, parameter SLOW_CLK_SPEED
     output wire [9:0] debug
 );
 
+wire [7:0] chan_out0, chan_out1, chan_out2, chan_out3;
 wire [9:0] beat_addr_out;
 wire [15:0] beat_out;
 wire [31:0] tg_per0, tg_per1, tg_per2, tg_per3;
@@ -54,6 +55,46 @@ bram bram0 (
     .addr_b(0),
     .we_a(1'b0),
     .we_b(1'b0)
+);
+
+// Wave Generators
+pulse_wave_gen pwg0 (
+    .clk(slow_clk),
+    .reset(reset),
+    .period(tg_per0),
+    .duty_div(1),
+    .value(chan_out0)
+);
+
+pulse_wave_gen pwg1 (
+    .clk(slow_clk),
+    .reset(reset),
+    .period(tg_per1),
+    .duty_div(2),
+    .value(chan_out1)
+);
+
+triangle_wave_gen twg0 (
+    .clk(slow_clk),
+    .reset(reset),
+    .period(tg_per2),
+    .value(chan_out2)
+);
+
+noise_gen pwg0 (
+    .clk(slow_clk),
+    .reset(reset),
+    .period(tg_per3),
+    .value(chan_out3)
+);
+// End Wave Generators
+
+mix4 mixer0 (
+    .samp0(chan_out0),
+    .samp1(chan_out1),
+    .samp2(chan_out2),
+    .samp3(chan_out3),
+    .samp_out(samp_out)
 );
 
 i2c_fsm i2fsm (
