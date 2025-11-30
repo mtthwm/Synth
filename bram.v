@@ -17,7 +17,7 @@ module bram
 	
 	// FOR QUESTA SIMULATION ONLY
 	initial begin
-		$readmemh("song.hex", ram);
+		// $readmemh("song.hex", ram);
 	end
 
 	// Port A 
