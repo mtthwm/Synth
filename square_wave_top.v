@@ -43,7 +43,6 @@ module square_wave_top (
         .period(_tg1_per),
         .duty_cycle(_tg1_per >> 1),
         .value(_samp_out)
-
     );
 
     sevenseg ssm0 (
@@ -56,8 +55,6 @@ module square_wave_top (
         .reset(reset),
         .sda(sda),
         .scl(scl),
-        .read_byte(i2c_byte_out),
-        .state_info(i2c_state_info),
         .debug(debug),
         .one_shot(1'b1)
     );

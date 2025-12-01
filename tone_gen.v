@@ -3,8 +3,8 @@ module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
     output reg [31:0] period0, period1, period2, period3
 );
     parameter SILENT = 4'd0;
-    parameter A4 = 4'd1;
-    parameter B4 = 4'd2;
+    parameter A3 = 4'd1;
+    parameter B3 = 4'd2;
     parameter C4 = 4'd3;
     parameter D4 = 4'd4;
     parameter E4 = 4'd5;
@@ -17,10 +17,10 @@ module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
     parameter E5 = 4'd12;
     parameter F5 = 4'd13;
     parameter G5 = 4'd14;
-    parameter A6 = 4'd15;
+    parameter A5 = 4'd15;
 
-    parameter A4_FREQ = 220;
-    parameter B4_FREQ = 247;
+    parameter A3_FREQ = 220;
+    parameter B3_FREQ = 247;
     parameter C4_FREQ = 262;
     parameter D4_FREQ = 294;
     parameter E4_FREQ = 330;
@@ -33,10 +33,10 @@ module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
     parameter E5_FREQ = 659;
     parameter F5_FREQ = 698;
     parameter G5_FREQ = 784;
-    parameter A6_FREQ = 880;
+    parameter A5_FREQ = 880;
 
-    parameter A4_period = CLOCK_SPEED / A4_FREQ;
-    parameter B4_period = CLOCK_SPEED / B4_FREQ;
+    parameter A3_period = CLOCK_SPEED / A3_FREQ;
+    parameter B3_period = CLOCK_SPEED / B3_FREQ;
     parameter C4_period = CLOCK_SPEED / C4_FREQ;
     parameter D4_period = CLOCK_SPEED / D4_FREQ;
     parameter E4_period = CLOCK_SPEED / E4_FREQ;
@@ -49,13 +49,13 @@ module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
     parameter E5_period = CLOCK_SPEED / E5_FREQ;
     parameter F5_period = CLOCK_SPEED / F5_FREQ;
     parameter G5_period = CLOCK_SPEED / G5_FREQ;
-    parameter A6_period = CLOCK_SPEED / A6_FREQ;
+    parameter A5_period = CLOCK_SPEED / A5_FREQ;
 
     always @(*) begin
         case (tone0)
             SILENT: period0 = 32'd0;
-            A4: period0 = A4_period;
-            B4: period0 = B4_period;
+            A3: period0 = A3_period;
+            B3: period0 = B3_period;
             C4: period0 = C4_period;
             D4: period0 = D4_period;
             E4: period0 = E4_period;
@@ -68,13 +68,13 @@ module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
             E5: period0 = E5_period;
             F5: period0 = F5_period;
             G5: period0 = G5_period;
-            A6: period0 = A6_period;
+            A5: period0 = A5_period;
             default: period0 = C4_period;
         endcase
         case (tone1)
             SILENT: period1 = 32'd0;
-            A4: period1 = A4_period;
-            B4: period1 = B4_period;
+            A3: period1 = A3_period;
+            B3: period1 = B3_period;
             C4: period1 = C4_period;
             D4: period1 = D4_period;
             E4: period1 = E4_period;
@@ -87,13 +87,13 @@ module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
             E5: period1 = E5_period;
             F5: period1 = F5_period;
             G5: period1 = G5_period;
-            A6: period1 = A6_period;
+            A5: period1 = A5_period;
             default: period1 = C4_period;
         endcase
         case (tone2)
             SILENT: period2 = 32'd0;
-            A4: period2 = A4_period;
-            B4: period2 = B4_period;
+            A3: period2 = A3_period;
+            B3: period2 = B3_period;
             C4: period2 = C4_period;
             D4: period2 = D4_period;
             E4: period2 = E4_period;
@@ -106,13 +106,13 @@ module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
             E5: period2 = E5_period;
             F5: period2 = F5_period;
             G5: period2 = G5_period;
-            A6: period2 = A6_period;
+            A5: period2 = A5_period;
             default: period2 = C4_period;
         endcase
         case (tone3)
             SILENT: period3 = 32'd0;
-            A4: period3 = A4_period;
-            B4: period3 = B4_period;
+            A3: period3 = A3_period;
+            B3: period3 = B3_period;
             C4: period3 = C4_period;
             D4: period3 = D4_period;
             E4: period3 = E4_period;
@@ -125,7 +125,7 @@ module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
             E5: period3 = E5_period;
             F5: period3 = F5_period;
             G5: period3 = G5_period;
-            A6: period3 = A6_period;
+            A5: period3 = A5_period;
             default: period3 = C4_period;
         endcase
     end

@@ -2,7 +2,7 @@ module apu #(parameter MAIN_CLK_SPEED = 32'd50_000_000, parameter SLOW_CLK_SPEED
     input wire clk, reset, restart, enable,
     input wire [9:0] start_addr, end_addr,
     inout wire sda,
-    output wire frame_clk, bit_clk, sdata, scl, note_clk,
+    output wire frame_clk, bit_clk, sdata, scl, note_clk, chip_clk,
     output wire [3:0] t0, t1, t2, t3,
     output wire [9:0] debug
 );
@@ -19,6 +19,7 @@ assign t1 = beat_out[11:8];
 assign t2 = beat_out[7:4];
 assign t3 = beat_out[3:0];
 assign debug = beat_addr_out;
+assign chip_clk = slow_clk;
 
 square_wave_gen clock_div (
     .clk(clk),
@@ -81,7 +82,7 @@ triangle_wave_gen twg0 (
     .value(chan_out2)
 );
 
-noise_gen pwg0 (
+noise_gen nwg0 (
     .clk(slow_clk),
     .reset(reset),
     .period(tg_per3),
@@ -112,7 +113,7 @@ i2s_controller is (
     .sample_right(samp_out),
     .frame_clk(frame_clk),
     .bit_clk(bit_clk),
-    .data(data)
+    .data(sdata)
 );
 
 endmodule
