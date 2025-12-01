@@ -1,4 +1,4 @@
-module apu #(parameter MAIN_CLK_SPEED = 32'd50_000_000, parameter SLOW_CLK_SPEED = 32'd12_288_000) (
+module apu #(parameter MAIN_CLK_SPEED = 32'd50_000_000, parameter SLOW_CLK_SPEED = 32'd12_288_000, parameter NOTE_CLK_SPEED = 32'd1) (
     input wire clk, reset, restart, enable,
     input wire [9:0] start_addr, end_addr,
     inout wire sda,
@@ -40,7 +40,7 @@ tone_gen #(.CLOCK_SPEED(SLOW_CLK_SPEED)) tg1 (
     .period3(tg_per3)
 );
 
-beat_counter #(.MAIN_CLK_SPEED(SLOW_CLK_SPEED), .NOTE_CLK_SPEED(32'b1)) bc0 (
+beat_counter #(.MAIN_CLK_SPEED(SLOW_CLK_SPEED), .NOTE_CLK_SPEED(NOTE_CLK_SPEED)) bc0 (
     .clk(slow_clk),
     .reset(reset),
     .start_addr(start_addr),
