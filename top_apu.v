@@ -1,5 +1,5 @@
 module top_apu (
-    input wire clk, reset,
+    input wire clk, reset, btn,
     inout wire sda,
     output wire frame_clk, bit_clk, sdata, scl, chip_clk,
     output wire [9:0] debug,
@@ -35,15 +35,16 @@ module top_apu (
     .start_addr(10'd0), 
     .end_addr(10'd128),
     .sda(sda),
+    .send_oneshot(~btn),
     .frame_clk(frame_clk), 
     .bit_clk(bit_clk), 
     .chip_clk(chip_clk),
     .sdata(sdata), 
     .scl(scl),
-    .t0(t0),
-    .t1(t1),
-    .t2(t2),
-    .t3(t3)
+    .t0_me(t0),
+    .t1_me(t1),
+    .t2_me(t2),
+    .t3_me(t3)
 );
 
 endmodule

@@ -1,12 +1,15 @@
 module apu #(parameter MAIN_CLK_SPEED = 32'd50_000_000, parameter SLOW_CLK_SPEED = 32'd12_288_000, parameter NOTE_CLK_SPEED = 32'd1) (
-    input wire clk, reset, restart, enable,
+    input wire clk, reset, restart, enable, send_oneshot,
     input wire [9:0] start_addr, end_addr,
     inout wire sda,
     output wire frame_clk, bit_clk, sdata, scl, note_clk, chip_clk,
-    output wire [3:0] t0, t1, t2, t3,
+    output wire [3:0] t0_me, t1_me, t2_me, t3_me,
     output wire [9:0] debug
 );
 
+wire slow_clk;
+wire [3:0] t0, t1, t2, t3;
+wire [3:0] t0_os, t1_os, t2_os, t3_os;
 wire [7:0] chan_out0, chan_out1, chan_out2, chan_out3;
 wire [9:0] beat_addr_out;
 wire [15:0] beat_out;
@@ -14,12 +17,17 @@ wire [31:0] tg_per0, tg_per1, tg_per2, tg_per3;
 
 wire [15:0] samp_out;
 
-assign t0 = beat_out[15:12];
-assign t1 = beat_out[11:8];
-assign t2 = beat_out[7:4];
-assign t3 = beat_out[3:0];
-assign debug = beat_addr_out;
+assign t0_me = beat_out[15:12];
+assign t1_me = beat_out[11:8];
+assign t2_me = beat_out[7:4];
+assign t3_me = beat_out[3:0];
+assign debug = {t0_os, t1_os, t2_os, t3_os};
 assign chip_clk = slow_clk;
+
+assign t0 = t0_os ? t0_os : t0_me;
+assign t1 = t1_os ? t1_os : t1_me;
+assign t2 = t2_os ? t2_os : t2_me;
+assign t3 = t3_os ? t3_os : t3_me;
 
 square_wave_gen clock_div (
     .clk(clk),
@@ -56,6 +64,16 @@ bram bram0 (
     .addr_b(0),
     .we_a(1'b0),
     .we_b(1'b0)
+);
+
+oneshot os0 (
+    .clk(slow_clk),
+    .send(send_oneshot),
+    .sfx(16'h0001),
+    .t0(t0_os),
+    .t1(t1_os),
+    .t2(t2_os),
+    .t3(t3_os)
 );
 
 // Wave Generators
