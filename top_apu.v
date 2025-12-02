@@ -33,7 +33,7 @@ module top_apu (
     .clk(clk), 
     .reset(reset),
     .start_addr(10'd0), 
-    .end_addr(10'd128),
+    .end_addr(10'd200),
     .sda(sda),
     .send_oneshot(~btn),
     .frame_clk(frame_clk), 
