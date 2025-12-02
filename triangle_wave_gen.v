@@ -30,10 +30,10 @@ module triangle_wave_gen (
             1: value = 8'd128;
             2: value = 8'd192;
             3: value = 8'd255;
-            4: value = 8'd192;
-            5: value = 8'd128;
-            6: value = 8'd64;
-            7: value = 8'd0;
+            4: value = 8'd255;
+            5: value = 8'd192;
+            6: value = 8'd128;
+            7: value = 8'd64;
             default: value = 8'd0;
         endcase
     end

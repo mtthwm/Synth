@@ -33,7 +33,7 @@ module top_apu (
     .clk(clk), 
     .reset(reset),
     .start_addr(10'd0), 
-    .end_addr(10'd64),
+    .end_addr(10'd128),
     .sda(sda),
     .frame_clk(frame_clk), 
     .bit_clk(bit_clk), 

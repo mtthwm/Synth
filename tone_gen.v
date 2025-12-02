@@ -19,21 +19,21 @@ module tone_gen #(parameter CLOCK_SPEED = 32'd25_000_000) (
     parameter G5 = 4'd14;
     parameter A5 = 4'd15;
 
-    parameter A3_period = 32'd55855;
-    parameter B3_period = 32'd49761;
-    parameter C4_period = 32'd46968;
-    parameter D4_period = 32'd41844;
-    parameter E4_period = 32'd37278;
-    parameter F4_period = 32'd35186;
-    parameter G4_period = 32'd31347;
-    parameter A4_period = 32'd27927;
-    parameter B4_period = 32'd24880;
-    parameter C5_period = 32'd23484;
-    parameter D5_period = 32'd20922;
-    parameter E5_period = 32'd18639;
-    parameter F5_period = 32'd17593;
-    parameter G5_period = 32'd15674;
-    parameter A5_period = 32'd13964;
+    parameter A3_period = 32'd41844;
+    parameter B3_period = 32'd37278;
+    parameter C4_period = 32'd35186;
+    parameter D4_period = 32'd31347;
+    parameter E4_period = 32'd27927;
+    parameter F4_period = 32'd26360;
+    parameter G4_period = 32'd23484;
+    parameter A4_period = 32'd20922;
+    parameter B4_period = 32'd18639;
+    parameter C5_period = 32'd17593;
+    parameter D5_period = 32'd15674;
+    parameter E5_period = 32'd13964;
+    parameter F5_period = 32'd13180;
+    parameter G5_period = 32'd11742;
+    parameter A5_period = 32'd10461;
 
     always @(*) begin
         case (tone0)

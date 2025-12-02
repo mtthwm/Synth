@@ -57,7 +57,7 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_apu -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_mix -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME tb_square_wave_gen -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_square_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_square_wave_gen -section_id tb_square_wave_gen
@@ -120,6 +120,47 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_beat_counter -section_
 set_global_assignment -name EDA_TEST_BENCH_NAME tb_apu -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_apu
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_apu -section_id tb_apu
+set_location_assignment PIN_J7 -to sdata
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name VERILOG_FILE tb_mix.v
+set_global_assignment -name VERILOG_FILE top_apu.v
+set_global_assignment -name VERILOG_FILE tb_apu.v
+set_global_assignment -name VERILOG_FILE apu.v
+set_global_assignment -name VERILOG_FILE tb_beat_counter.v
+set_global_assignment -name VERILOG_FILE beat_counter.v
+set_global_assignment -name VERILOG_FILE mix4.v
+set_global_assignment -name VERILOG_FILE bram.v
+set_global_assignment -name VERILOG_FILE song_fsm.v
+set_global_assignment -name VERILOG_FILE song_fsm_top.v
+set_global_assignment -name VERILOG_FILE noise_gen.v
+set_global_assignment -name VERILOG_FILE lsfr.v
+set_global_assignment -name VERILOG_FILE triangle_wave_gen.v
+set_global_assignment -name VERILOG_FILE tb_triangle_wave_gen.v
+set_global_assignment -name VERILOG_FILE shiftreg.v
+set_global_assignment -name VERILOG_FILE square_wave_top.v
+set_global_assignment -name VERILOG_FILE i2c_test_top.v
+set_global_assignment -name VERILOG_FILE sevenseg.v
+set_global_assignment -name VERILOG_FILE pulse_sender.v
+set_global_assignment -name VERILOG_FILE gpio_i2c_test.v
+set_global_assignment -name VERILOG_FILE i2c_fsm.v
+set_global_assignment -name VERILOG_FILE tb_i2s_controller.v
+set_global_assignment -name VERILOG_FILE i2s_controller.v
+set_global_assignment -name VERILOG_FILE square_amp.v
+set_global_assignment -name VERILOG_FILE tone_gen.v
+set_global_assignment -name VERILOG_FILE tb_tone_gen.v
+set_global_assignment -name VERILOG_FILE tb_i2c_controller.v
+set_global_assignment -name VERILOG_FILE i2c_controller.v
+set_global_assignment -name VERILOG_FILE tflipflop.v
+set_global_assignment -name VERILOG_FILE counter.v
+set_global_assignment -name VERILOG_FILE tb_square_wave_gen.v
+set_global_assignment -name VERILOG_FILE square_wave_gen.v
+set_global_assignment -name VERILOG_FILE Synth.v
+set_global_assignment -name VERILOG_FILE gpio_test.v
+set_global_assignment -name EDA_TEST_BENCH_NAME tb_mix -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_mix
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_mix -section_id tb_mix
 set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_square_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_square_wave_gen.v -section_id tb_square_wave_gen
 set_global_assignment -name EDA_TEST_BENCH_FILE i2c_controller.v -section_id tb_i2c_controller
@@ -163,41 +204,11 @@ set_global_assignment -name EDA_TEST_BENCH_FILE triangle_wave_gen.v -section_id 
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_apu.v -section_id tb_apu
 set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_apu
 set_global_assignment -name EDA_TEST_BENCH_FILE square_amp.v -section_id tb_apu
-set_global_assignment -name VERILOG_FILE top_apu.v
-set_global_assignment -name VERILOG_FILE tb_apu.v
-set_global_assignment -name VERILOG_FILE apu.v
-set_global_assignment -name VERILOG_FILE tb_beat_counter.v
-set_global_assignment -name VERILOG_FILE beat_counter.v
-set_global_assignment -name VERILOG_FILE mix4.v
-set_global_assignment -name VERILOG_FILE bram.v
-set_global_assignment -name VERILOG_FILE song_fsm.v
-set_global_assignment -name VERILOG_FILE song_fsm_top.v
-set_global_assignment -name VERILOG_FILE noise_gen.v
-set_global_assignment -name VERILOG_FILE lsfr.v
-set_global_assignment -name VERILOG_FILE triangle_wave_gen.v
-set_global_assignment -name VERILOG_FILE tb_triangle_wave_gen.v
-set_global_assignment -name VERILOG_FILE shiftreg.v
-set_global_assignment -name VERILOG_FILE square_wave_top.v
-set_global_assignment -name VERILOG_FILE i2c_test_top.v
-set_global_assignment -name VERILOG_FILE sevenseg.v
-set_global_assignment -name VERILOG_FILE pulse_sender.v
-set_global_assignment -name VERILOG_FILE gpio_i2c_test.v
-set_global_assignment -name VERILOG_FILE i2c_fsm.v
-set_global_assignment -name VERILOG_FILE tb_i2s_controller.v
-set_global_assignment -name VERILOG_FILE i2s_controller.v
-set_global_assignment -name VERILOG_FILE square_amp.v
-set_global_assignment -name VERILOG_FILE tone_gen.v
-set_global_assignment -name VERILOG_FILE tb_tone_gen.v
-set_global_assignment -name VERILOG_FILE tb_i2c_controller.v
-set_global_assignment -name VERILOG_FILE i2c_controller.v
-set_global_assignment -name VERILOG_FILE tflipflop.v
-set_global_assignment -name VERILOG_FILE counter.v
-set_global_assignment -name VERILOG_FILE tb_square_wave_gen.v
-set_global_assignment -name VERILOG_FILE square_wave_gen.v
-set_global_assignment -name VERILOG_FILE Synth.v
-set_global_assignment -name VERILOG_FILE gpio_test.v
-set_location_assignment PIN_J7 -to sdata
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name EDA_TEST_BENCH_FILE lsfr.v -section_id tb_mix
+set_global_assignment -name EDA_TEST_BENCH_FILE mix4.v -section_id tb_mix
+set_global_assignment -name EDA_TEST_BENCH_FILE noise_gen.v -section_id tb_mix
+set_global_assignment -name EDA_TEST_BENCH_FILE pulse_wave_gen.v -section_id tb_mix
+set_global_assignment -name EDA_TEST_BENCH_FILE square_wave_gen.v -section_id tb_mix
+set_global_assignment -name EDA_TEST_BENCH_FILE triangle_wave_gen.v -section_id tb_mix
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_mix.v -section_id tb_mix
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
