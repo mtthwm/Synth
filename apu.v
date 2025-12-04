@@ -5,11 +5,15 @@ module apu #(parameter MAIN_CLK_SPEED = 32'd50_000_000, parameter SLOW_CLK_SPEED
     inout wire sda,
     output wire frame_clk, bit_clk, sdata, scl, note_clk, chip_clk,
     output wire [3:0] t0_me, t1_me, t2_me, t3_me,
-    output wire [3:0] t3_lookahead,
-    output reg lookahead_ready,
+    output wire [3:0] lookahead_tone,
+    output wire lookahead_ready,
     output wire [9:0] debug,
-    output reg [9:0] timestamp
+    output wire [9:0] timestamp
 );
+
+parameter S_NEW_NOTE_RECEIVED = 2'd0;
+parameter S_NEW_NOTE_ACKNOWLEDGED = 2'd1;
+parameter S_WAITING_FOR_NEW_NOTE = 2'd2;
 
 wire slow_clk;
 wire [3:0] t0, t1, t2, t3;
@@ -21,11 +25,13 @@ wire [31:0] tg_per0, tg_per1, tg_per2, tg_per3;
 
 wire [15:0] samp_out;
 
+reg [1:0] lookahead_state;
+
 assign t0_me = beat_out[15:12];
 assign t1_me = beat_out[11:8];
 assign t2_me = beat_out[7:4];
 assign t3_me = beat_out[3:0];
-assign debug = {t0_os, t1_os, t2_os, t3_os};
+assign debug = {8'd0, lookahead_state};
 assign chip_clk = slow_clk;
 
 assign t0 = t0_os ? t0_os : t0_me;
@@ -33,21 +39,31 @@ assign t1 = t1_os ? t1_os : t1_me;
 assign t2 = t2_os ? t2_os : t2_me;
 assign t3 = t3_os ? t3_os : t3_me;
 
-assign t3_lookahead = beat_lookahead[3:0];
+assign lookahead_tone = beat_lookahead[3:0];
+assign timestamp = beat_addr_out - start_addr;
 
-always @(posedge acknowledge_lookahead, posedge note_clk, posedge reset) begin
-    if (reset) begin
-        lookahead_ready = 1'b0;
-        timestamp <= 10'd0;
-    end else begin
-        if (note_clk) begin
-            lookahead_ready <= 1'b1;
-            timestamp <= timestamp + 10'd1;
-        end else begin
-            lookahead_ready <= 1'b0;
+always @(posedge clk, posedge reset) begin
+    case (lookahead_state)
+        S_WAITING_FOR_NEW_NOTE: begin
+            if (note_clk) begin
+                lookahead_state <= S_NEW_NOTE_RECEIVED;
+            end
         end
-    end
+        S_NEW_NOTE_RECEIVED: begin
+            if (acknowledge_lookahead) begin
+                lookahead_state <= S_NEW_NOTE_ACKNOWLEDGED;
+            end
+        end
+        S_NEW_NOTE_ACKNOWLEDGED: begin
+            if (!note_clk) begin
+                lookahead_state <= S_WAITING_FOR_NEW_NOTE;
+            end
+        end
+        default: lookahead_state <= S_WAITING_FOR_NEW_NOTE;
+    endcase
 end
+
+assign lookahead_ready = (lookahead_tone !== 4'd0) && (lookahead_state === S_NEW_NOTE_RECEIVED);
 
 square_wave_gen clock_div (
     .clk(clk),
