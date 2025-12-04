@@ -1,10 +1,14 @@
 module apu #(parameter MAIN_CLK_SPEED = 32'd50_000_000, parameter SLOW_CLK_SPEED = 32'd12_288_000, parameter NOTE_CLK_SPEED = 32'd1) (
     input wire clk, reset, restart, enable, send_oneshot,
-    input wire [9:0] start_addr, end_addr,
+    input wire [9:0] start_addr, end_addr, lookahead_offset,
+    input wire acknowledge_lookahead,
     inout wire sda,
     output wire frame_clk, bit_clk, sdata, scl, note_clk, chip_clk,
     output wire [3:0] t0_me, t1_me, t2_me, t3_me,
-    output wire [9:0] debug
+    output wire [3:0] t3_lookahead,
+    output reg lookahead_ready,
+    output wire [9:0] debug,
+    output reg [9:0] timestamp
 );
 
 wire slow_clk;
@@ -12,7 +16,7 @@ wire [3:0] t0, t1, t2, t3;
 wire [3:0] t0_os, t1_os, t2_os, t3_os;
 wire [7:0] chan_out0, chan_out1, chan_out2, chan_out3;
 wire [9:0] beat_addr_out;
-wire [15:0] beat_out;
+wire [15:0] beat_out, beat_lookahead;
 wire [31:0] tg_per0, tg_per1, tg_per2, tg_per3;
 
 wire [15:0] samp_out;
@@ -28,6 +32,22 @@ assign t0 = t0_os ? t0_os : t0_me;
 assign t1 = t1_os ? t1_os : t1_me;
 assign t2 = t2_os ? t2_os : t2_me;
 assign t3 = t3_os ? t3_os : t3_me;
+
+assign t3_lookahead = beat_lookahead[3:0];
+
+always @(posedge acknowledge_lookahead, posedge note_clk, posedge reset) begin
+    if (reset) begin
+        lookahead_ready = 1'b0;
+        timestamp <= 10'd0;
+    end else begin
+        if (note_clk) begin
+            lookahead_ready <= 1'b1;
+            timestamp <= timestamp + 10'd1;
+        end else begin
+            lookahead_ready <= 1'b0;
+        end
+    end
+end
 
 square_wave_gen clock_div (
     .clk(clk),
@@ -61,7 +81,8 @@ bram bram0 (
     .clk(slow_clk),
     .addr_a(beat_addr_out),
     .q_a(beat_out),
-    .addr_b(0),
+    .q_b(beat_lookahead),
+    .addr_b(beat_addr_out + lookahead_offset),
     .we_a(1'b0),
     .we_b(1'b0)
 );

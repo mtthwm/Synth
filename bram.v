@@ -31,6 +31,19 @@ module bram
 		else begin
 			q_a <= ram[addr_a];		//read
 		end 
+	end 
+
+	// Port B 
+	always @ (posedge clk)
+	begin
+		if (we_b) 
+		begin
+			ram[addr_b] <= data_b;	//write
+			q_b <= data_b;
+		end
+		else begin
+			q_b <= ram[addr_b];	//read
+		end 
 	end
 
 endmodule

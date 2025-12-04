@@ -3,8 +3,11 @@ module tb_apu ();
     reg clk, reset, send_oneshot;
     reg [9:0] start_addr, end_addr;
     wire note_clk;
+    reg acknowledge_lookahead;
+    wire lookahead_ready;
     wire [3:0] t0, t1, t2, t3;
-    wire [9:0] debug;
+    wire [9:0] debug, timestamp;
+    wire [3:0] t3_lookahead;
 
     apu #(.MAIN_CLK_SPEED(32'd40), .SLOW_CLK_SPEED(32'd20)) apu0 (
         .clk(clk),
@@ -12,6 +15,11 @@ module tb_apu ();
         .start_addr(start_addr),
         .end_addr(end_addr),
         .send_oneshot(send_oneshot),
+        .timestamp(timestamp),
+        .lookahead_offset(10'd2),
+        .t3_lookahead(t3_lookahead),
+        .lookahead_ready(lookahead_ready),
+        .acknowledge_lookahead(acknowledge_lookahead),
         .note_clk(note_clk),
         .t0_me(t0),
         .t1_me(t1),
@@ -30,6 +38,7 @@ module tb_apu ();
 
         #32;
         send_oneshot = 1'b0; #1; send_oneshot = 1'b1; #1; send_oneshot = 1'b0;
+        acknowledge_lookahead = 1'b0; #1; acknowledge_lookahead = 1'b1; #1; acknowledge_lookahead = 1'b0;
         
 
     end
