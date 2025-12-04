@@ -93,7 +93,7 @@ beat_counter #(.MAIN_CLK_SPEED(SLOW_CLK_SPEED), .NOTE_CLK_SPEED(NOTE_CLK_SPEED))
     .note_clk_out(note_clk)
 );
 
-bram bram0 (
+aud_bram bram0 (
     .clk(slow_clk),
     .addr_a(beat_addr_out),
     .q_a(beat_out),

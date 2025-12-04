@@ -4,7 +4,7 @@
 //VERIFY: RESOURCE MAPPING, should see only 2MK10 blocks
 //
 
-module bram
+module aud_bram
 #(parameter DATA_WIDTH=16, parameter ADDR_WIDTH=10)	//16 data width for 16 bit words, 2^10 = 1024 address locations
 (
 	input [(DATA_WIDTH-1):0] data_a, data_b,

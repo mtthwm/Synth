@@ -131,7 +131,7 @@ set_global_assignment -name VERILOG_FILE apu.v
 set_global_assignment -name VERILOG_FILE tb_beat_counter.v
 set_global_assignment -name VERILOG_FILE beat_counter.v
 set_global_assignment -name VERILOG_FILE mix4.v
-set_global_assignment -name VERILOG_FILE bram.v
+set_global_assignment -name VERILOG_FILE aud_bram.v
 set_global_assignment -name VERILOG_FILE song_fsm.v
 set_global_assignment -name VERILOG_FILE song_fsm_top.v
 set_global_assignment -name VERILOG_FILE noise_gen.v
@@ -197,7 +197,7 @@ set_global_assignment -name EDA_TEST_BENCH_FILE tb_beat_counter.v -section_id tb
 set_global_assignment -name EDA_TEST_BENCH_FILE apu.v -section_id tb_apu
 set_global_assignment -name EDA_TEST_BENCH_FILE counter.v -section_id tb_apu
 set_global_assignment -name EDA_TEST_BENCH_FILE beat_counter.v -section_id tb_apu
-set_global_assignment -name EDA_TEST_BENCH_FILE bram.v -section_id tb_apu
+set_global_assignment -name EDA_TEST_BENCH_FILE aud_bram.v -section_id tb_apu
 set_global_assignment -name EDA_TEST_BENCH_FILE lsfr.v -section_id tb_apu
 set_global_assignment -name EDA_TEST_BENCH_FILE mix4.v -section_id tb_apu
 set_global_assignment -name EDA_TEST_BENCH_FILE noise_gen.v -section_id tb_apu

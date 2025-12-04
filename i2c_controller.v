@@ -36,7 +36,7 @@ module i2c_controller (
     assign write_in_progress = state == WRITING_BYTE;
 
     wire [7:0] counter_8_out;
-    counter count8 (
+    aud_counter count8 (
         .enable(sda !== 1'bz),
         .clk(oop_clk),
         .reset(counter_reset),
@@ -45,7 +45,7 @@ module i2c_controller (
     );
 
     wire [7:0] clock_div_out;
-    counter clock_div (
+    aud_counter clock_div (
         .enable(1'b1),
         .clk(clk),
         .reset(reset),

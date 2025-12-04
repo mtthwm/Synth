@@ -22,7 +22,7 @@ module i2s_controller (
     wire [31:0] all_data;
     wire [7:0] counter_out;
 
-    counter cnt (
+    aud_counter cnt (
         .clk(oop_clk),
         .reset(reset),
         .max(8'd32),

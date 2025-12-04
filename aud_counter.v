@@ -1,4 +1,4 @@
-module counter (
+module aud_counter (
     input wire clk, reset, enable,
     input wire[7:0] max,
     output reg [7:0] value
