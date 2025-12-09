@@ -11,11 +11,13 @@ module apu #(parameter MAIN_CLK_SPEED = 32'd50_000_000, parameter SLOW_CLK_SPEED
     output wire [9:0] timestamp
 );
 
+parameter I2S_CLOCK_SPEED = 32'd6_144_000;
+
 parameter S_NEW_NOTE_RECEIVED = 2'd0;
 parameter S_NEW_NOTE_ACKNOWLEDGED = 2'd1;
 parameter S_WAITING_FOR_NEW_NOTE = 2'd2;
 
-wire slow_clk;
+wire slow_clk, i2s_clk;
 wire [3:0] t0, t1, t2, t3;
 wire [3:0] t0_os, t1_os, t2_os, t3_os;
 wire [7:0] chan_out0, chan_out1, chan_out2, chan_out3;
@@ -130,10 +132,11 @@ pulse_wave_gen pwg1 (
     .value(chan_out1)
 );
 
-triangle_wave_gen twg0 (
+pulse_wave_gen pwg2 (
     .clk(slow_clk),
     .reset(reset),
     .period(tg_per2),
+    .duty_div(3),
     .value(chan_out2)
 );
 

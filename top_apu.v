@@ -29,11 +29,11 @@ module top_apu (
       .seven_seg(ss3)  
     );
 
-    apu #(.MAIN_CLK_SPEED(32'd50_000_000), .SLOW_CLK_SPEED(32'd12_288_000), .NOTE_CLK_SPEED(32'd16)) apu0  (
+    apu #(.MAIN_CLK_SPEED(32'd50_000_000), .SLOW_CLK_SPEED(32'd12_288_000), .NOTE_CLK_SPEED(32'd10)) apu0  (
     .clk(clk), 
     .reset(reset),
     .start_addr(10'd0), 
-    .end_addr(10'd200),
+    .end_addr(10'd400),
     .sda(sda),
     .send_oneshot(~btn),
     .frame_clk(frame_clk), 
